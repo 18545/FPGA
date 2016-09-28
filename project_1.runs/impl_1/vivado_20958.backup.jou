@@ -1,0 +1,10 @@
+#-----------------------------------------------------------
+# Vivado v2015.2 (64-bit)
+# SW Build 1266856 on Fri Jun 26 16:35:25 MDT 2015
+# IP Build 1264090 on Wed Jun 24 14:22:01 MDT 2015
+# Start of session at: Tue Sep 13 21:30:13 2016
+# Process ID: 19561
+# Log file: /afs/ece.cmu.edu/usr/jacobwei/Public/project_1/project_1.runs/impl_1/mastermindVGA.vdi
+# Journal file: /afs/ece.cmu.edu/usr/jacobwei/Public/project_1/project_1.runs/impl_1/vivado.jou
+#-----------------------------------------------------------
+source mastermindVGA.tcl -notrace

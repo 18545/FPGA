@@ -1,0 +1,7 @@
+set_property SRC_FILE_INFO {cfile:/afs/ece.cmu.edu/usr/jacobwei/Public/project_1/zedboard_master_XDC_RevC_D_v3.xdc rfile:../../../zedboard_master_XDC_RevC_D_v3.xdc id:1} [current_design]
+set_property src_info {type:XDC file:1 line:182 export:INPUT save:INPUT read:READ} [current_design]
+set_property PACKAGE_PIN R16 [get_ports BTND]
+set_property src_info {type:XDC file:1 line:183 export:INPUT save:INPUT read:READ} [current_design]
+set_property PACKAGE_PIN N15 [get_ports BTNL]
+set_property src_info {type:XDC file:1 line:184 export:INPUT save:INPUT read:READ} [current_design]
+set_property PACKAGE_PIN R18 [get_ports BTNR]
