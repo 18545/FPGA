@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="synth_1" LaunchPart="xc7z020clg484-1" LaunchTime="1475249122">
-  <File Type="VDS-TIMING-PB" Name="box_timing_summary_synth.pb"/>
-  <File Type="VDS-TIMINGSUMMARY" Name="box_timing_summary_synth.rpt"/>
-  <File Type="RDS-DCP" Name="box.dcp"/>
-  <File Type="RDS-UTIL-PB" Name="box_utilization_synth.pb"/>
-  <File Type="RDS-UTIL" Name="box_utilization_synth.rpt"/>
-  <File Type="RDS-PROPCONSTRS" Name="box_drc_synth.rpt"/>
-  <File Type="RDS-RDS" Name="box.vds"/>
-  <File Type="PA-TCL" Name="box.tcl"/>
+<GenRun Id="synth_1" LaunchPart="xc7z020clg484-1" LaunchTime="1475263670">
+  <File Type="VDS-TIMING-PB" Name="mastermindVGA_timing_summary_synth.pb"/>
+  <File Type="VDS-TIMINGSUMMARY" Name="mastermindVGA_timing_summary_synth.rpt"/>
+  <File Type="RDS-DCP" Name="mastermindVGA.dcp"/>
+  <File Type="RDS-UTIL-PB" Name="mastermindVGA_utilization_synth.pb"/>
+  <File Type="RDS-UTIL" Name="mastermindVGA_utilization_synth.rpt"/>
+  <File Type="RDS-PROPCONSTRS" Name="mastermindVGA_drc_synth.rpt"/>
+  <File Type="RDS-RDS" Name="mastermindVGA.vds"/>
+  <File Type="PA-TCL" Name="mastermindVGA.tcl"/>
   <File Type="RUN-STRAT" Name="$PDATADIR/runs/synth_1/synth_1.psg"/>
   <File Type="RUN-SRCS" Name="$PDATADIR/runs/synth_1/sources.xml"/>
   <File Type="RUN-CONSTRS" Name="$PDATADIR/runs/synth_1/constrs_in.xml"/>
   <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1">
     <Filter Type="Srcs"/>
     <File Path="$PSRCDIR/sources_1/new/box.sv">
-      <FileInfo SFType="Verilog">
+      <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="implementation"/>
         <Attr Name="UsedIn" Val="simulation"/>
@@ -22,7 +22,6 @@
     </File>
     <File Path="$PPRDIR/vga.sv">
       <FileInfo>
-        <Attr Name="AutoDisabled" Val="1"/>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="implementation"/>
         <Attr Name="UsedIn" Val="simulation"/>
@@ -30,7 +29,7 @@
     </File>
     <Config>
       <Option Name="DesignMode" Val="RTL"/>
-      <Option Name="TopModule" Val="box"/>
+      <Option Name="TopModule" Val="mastermindVGA"/>
       <Option Name="TopAutoSet" Val="TRUE"/>
     </Config>
   </FileSet>

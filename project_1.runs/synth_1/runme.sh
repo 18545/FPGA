@@ -36,4 +36,4 @@ EAStep()
      fi
 }
 
-EAStep vivado -log box.vds -m64 -mode batch -messageDb vivado.pb -notrace -source box.tcl
+EAStep vivado -log mastermindVGA.vds -m64 -mode batch -messageDb vivado.pb -notrace -source mastermindVGA.tcl

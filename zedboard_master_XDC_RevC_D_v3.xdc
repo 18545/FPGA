@@ -177,7 +177,7 @@
 
 
 
-
+set_property PACKAGE_PIN T18 [get_ports BTNU]
 set_property PACKAGE_PIN P16 [get_ports BTNC]
 set_property PACKAGE_PIN R16 [get_ports BTND]
 set_property PACKAGE_PIN N15 [get_ports BTNL]

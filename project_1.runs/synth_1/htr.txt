@@ -6,4 +6,4 @@
 # Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
 #
 
-vivado -log box.vds -m64 -mode batch -messageDb vivado.pb -notrace -source box.tcl
+vivado -log mastermindVGA.vds -m64 -mode batch -messageDb vivado.pb -notrace -source mastermindVGA.tcl

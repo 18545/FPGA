@@ -1,19 +1,9 @@
 /** FILE
- *  mastermindVGA.sv
+ *  vga.sv
  *
  *  BRIEF
- *  Module that acts an an interface between the Mastermind game and
- *  the VGA output.
- *
- *  The game field will look like a standard Mastermind playing field,
- *  with a small number in the lower right indicating the number of games
- *  available.
- *
- *  Zorgian terminology:
- *  Znarly = correct shape, correct spot
- *  Zood   = correct shape, wrong spot
- *
- *  AUTHOR
+ *  Module that acts an an interface for the VGA output.
+ *  AUTHOR of VGA code
  *  Anita Zhang (anitazha)
  */
 
@@ -45,7 +35,7 @@ typedef enum logic [2:0] {
 
 module mastermindVGA (
     input  logic        GCLK,
-    input  logic        BTNC, BTNN, BTNS, BTNE, BTNW
+    input  logic        BTNC, BTND, BTNU, BTNL, BTNR,
     input logic SW0,SW1,SW2,SW3,SW4,SW5,SW6,SW7,
 
     output logic        VGA_VS, VGA_HS,
@@ -58,7 +48,6 @@ module mastermindVGA (
     /****************************************
      *       Internal Signals
      ****************************************/
-
 
     // other
     (* mark_debug = "true" *) logic                 clk;
@@ -76,8 +65,6 @@ module mastermindVGA (
         else clk_50 <= ~clk_50;
     end
 
-
-
     /****************************************
      *       VGA data
      ****************************************/
@@ -91,9 +78,6 @@ module mastermindVGA (
             .clk_50     (clk_50),
             .reset      (reset));
 
-//    assign VGA_BLANK_N           = ~blank;
-//    assign VGA_CLK               = CLOCK_50;
-//    assign VGA_SYNC_N            = 1'b0;
     assign {VGA_B1, VGA_B2, VGA_B3, VGA_B4} = blue;
     assign {VGA_G1, VGA_G2, VGA_G3, VGA_G4} = green;
     assign {VGA_R1, VGA_R2, VGA_R3, VGA_R4} = red;
@@ -101,6 +85,7 @@ module mastermindVGA (
     logic isNum1, isNum2, isNum3, isNum4, isNum5;
 
     logic drawBox;
+    logic [3:0] buttonDown;
 
     always_comb begin
         if(blank) begin
@@ -118,21 +103,21 @@ module mastermindVGA (
         end
     end
 
-    box faceBox {
-      .move_up (BTNN),
-      .move_down (BTNS),
-      .move_left (BTNW),
-      .move_right (BTNE),
+    box faceBox (
+      .move_up (BTNU),
+      .move_down (BTND),
+      .move_left (BTNL),
+      .move_right (BTNR),
       .mode (SW7),
+      .clk (clk_50),
       .rst_n (SW6),
       .x (x),
       .y (y),
-      .draw_box (drawBox)
-    }
+      .draw_box (drawBox),
+      .button_down (buttonDown)
+    );
 
-    assign group1 = {SW0,SW1,SW2,SW3};
-    assign group2 = {SW4,SW5,SW6,SW7};
-    assign {LD0,LD1,LD2,LD3} = group1 ^ group2;
+    assign {LD0,LD1,LD2,LD3} = buttonDown;
 
     drawNumber numDrawer1 (
                     .inNum  (isNum1),
@@ -149,7 +134,7 @@ module mastermindVGA (
                     .y      (y),
                     .posX   (150),
                     .posY   (100),
-                    .value  (0)
+                    .value  (8)
                     );
 
     drawNumber numDrawer3 (
@@ -179,13 +164,7 @@ module mastermindVGA (
                 .value  (5)
                 );
 
-
-    /****************************************
-     *          Store Game Info
-     ****************************************/
-
 endmodule: mastermindVGA
-
 
 
 /*****************************************************************
@@ -312,7 +291,7 @@ module drawNumber
     output logic        inNum,
     input  logic [9:0]  x, y,
     input  logic [9:0]  posX, posY,
-    input  logic [2:0]  value
+    input  logic [3:0]  value
     );
 
     // internal signals
@@ -328,38 +307,46 @@ module drawNumber
         inNum = 1'b0;
 
         case (value)
-            3'd0: begin
+            4'd0: begin
                 if (isSeg[5:0] | isSeg[6])
                     inNum = 1'b1;
             end
-            3'd1: begin
+            4'd1: begin
                 if (isSeg[2:1])
                     inNum = 1'b1;
             end
-            3'd2: begin
+            4'd2: begin
                 if (isSeg[0] | isSeg[1] | isSeg[6] | isSeg[4] | isSeg[3])
                     inNum = 1'b1;
             end
-            3'd3: begin
+            4'd3: begin
                 if (isSeg[3:0] || isSeg[6])
                     inNum = 1'b1;
             end
-            3'd4: begin
+            4'd4: begin
                 if (isSeg[6:5] || isSeg[2:1])
                     inNum = 1'b1;
             end
-            3'd5: begin
+            4'd5: begin
                 if (isSeg[6:5] || isSeg[3:2] || isSeg[0])
                     inNum = 1'b1;
             end
-            3'd6: begin
+            4'd6: begin
                 if (isSeg[6:2] || isSeg[0])
                     inNum = 1'b1;
             end
-            3'd7: begin
+            4'd7: begin
                 if (isSeg[2:0])
                     inNum = 1'b1;
             end
+            4'd8: begin
+                if (isSeg[6:0])
+                    inNum = 1'b1;
+            end
+            4'd9: begin
+                if (isSeg[3:0] || isSeg[6:5])
+                    inNum = 1'b1;
+            end                        
         endcase
     end
 
