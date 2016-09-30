@@ -1,22 +1,22 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
+// Company:
+// Engineer:
+//
 // Create Date: 09/28/2016 11:50:35 AM
-// Design Name: 
+// Design Name:
 // Module Name: box
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
+// Project Name:
+// Target Devices:
+// Tool Versions:
+// Description:
+//
+// Dependencies:
+//
 // Revision:
 // Revision 0.01 - File Created
 // Additional Comments:
-// 
+//
 //////////////////////////////////////////////////////////////////////////////////
 
 `define TOP 0
@@ -24,32 +24,58 @@
 `define BOTTOM 2
 `define LEFT 3
 
+`define WIDTH 640
+`define HEIGHT 480
+`define BOX_WIDTH WIDTH/4
+`define BOX_HEIGHT HEIGHT/4
+`define START_X WIDTH/2
+`define START_Y HEIGHT/2
+
+
+
 module box(
-    input logic move_up, move_down, move_left, move_right, middle, mode,
-    output logic [3:0][9:0] side //0=top, 1=right, 2=bottom, 3=left
+    input logic move_up, move_down, move_left, move_right, middle, mode, rst_n,
+    input  logic [9:0]  x, y,
+    output logic draw_box
     );
-    
-    logic [3:0] clr, en, count_up, count_down;
-    logic [3:0][9:0] count;
-    
-    up_down_counter width(clk, rst_n, clr[0], en[0], move_right, move_left, count[0]);
-    up_down_counter height(clk, rst_n, clr[1], en[1], move_up, move_down, count[1]);
-    up_down_counter x(clk, rst_n, clr[2], en[2], move_right, move_left, count[2]);
-    up_down_counter y(clk, rst_n, clr[3], en[3], move_up, move_down, count[3]);    
-    
+
+    logic [9:0] width, height, c_x, c_y;
+    logic [3:0][9:0] side;
+
+    assign draw_box = (x == sides[LEFT] || x == sides[RIGHT] ||
+                       y == sides[TOP] || y == sides[BOTTOM])
+
+    assign side[TOP] = c_y - height;
+    assign side[BOTTOM] = c_y + height;
+    assign side[LEFT] = c_x - width;
+    assign side[RIGHT] = c_x + width;
+
+    assign x_y_mode = mode;
+    assign width_height_mode = !mode;
+
+    up_down_counter #(BOX_WIDTH) width_counter(clk, rst_n,
+      width_height_mode, move_right, move_left, width);
+    up_down_counter #(BOX_HEIGHT) height_counter(clk, rst_n,
+      width_height_mode, move_up, move_down, height);
+    up_down_counter #(START_X) c_x_counter(clk, rst_n,
+      x_y_mode, move_right, move_left, c_x);
+    up_down_counter #(START_Y) c_y_counter(clk, rst_n,
+      x_y_mode, move_up, move_down, c_y);
+
 endmodule
 
-module up_down_counter(
-    input logic clk, rst_n, clr, en, 
+module up_down_counter
+    #(parameter DEFAULT=8'd100) (
+    input logic clk, rst_n, clr, en,
     input logic count_up, count_down,
     output logic [9:0] count
     );
-    
+
     always_ff @(posedge clk) begin
             if (~rst_n)
-                count <= 'b0;
+                count <= DEFAULT;
             else if (clr)
-                count <= 'b0;
+                count <= DEFAULT;
             else if (en) begin
                 if (count_up) count <= count + 1'b1;
                 else if (count_down) count <= count - 1'b1;

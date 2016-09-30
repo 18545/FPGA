@@ -45,8 +45,9 @@ typedef enum logic [2:0] {
 
 module mastermindVGA (
     input  logic        GCLK,
-    input  logic        BTNC, SW0,SW1,SW2,SW3,SW4,SW5,SW6,SW7,
-    
+    input  logic        BTNC, BTNN, BTNS, BTNE, BTNW
+    input logic SW0,SW1,SW2,SW3,SW4,SW5,SW6,SW7,
+
     output logic        VGA_VS, VGA_HS,
     output logic VGA_B1, VGA_B2, VGA_B3, VGA_B4,
     output logic VGA_G1, VGA_G2, VGA_G3, VGA_G4,
@@ -57,8 +58,8 @@ module mastermindVGA (
     /****************************************
      *       Internal Signals
      ****************************************/
-    
-  
+
+
     // other
     (* mark_debug = "true" *) logic                 clk;
     logic clk_50, clk_25,blank;
@@ -67,15 +68,15 @@ module mastermindVGA (
     logic [3:0] red,green,blue;
     // renamed signals
     assign clk = clk_50;
- 
+
     assign reset = BTNC;
-    
+
     always_ff @(posedge GCLK, posedge reset) begin
         if (reset) clk_50 <= 0;
         else clk_50 <= ~clk_50;
     end
-    
- 
+
+
 
     /****************************************
      *       VGA data
@@ -96,15 +97,17 @@ module mastermindVGA (
     assign {VGA_B1, VGA_B2, VGA_B3, VGA_B4} = blue;
     assign {VGA_G1, VGA_G2, VGA_G3, VGA_G4} = green;
     assign {VGA_R1, VGA_R2, VGA_R3, VGA_R4} = red;
-    
+
     logic isNum1, isNum2, isNum3, isNum4, isNum5;
-    
+
+    logic drawBox;
+
     always_comb begin
         if(blank) begin
             blue =  4'h0;
             green =  4'h0;
             red =  4'h0;
-        end else if(isNum1 | isNum2 | isNum3 | isNum4 | isNum5) begin
+        end else if(isNum1 | isNum2 | isNum3 | isNum4 | isNum5 | drawBox) begin
             blue =  4'hf;
             green =  4'hf;
             red =  4'hf;
@@ -114,13 +117,23 @@ module mastermindVGA (
             red = (SW0) ? 4'hf : 4'h0;
         end
     end
-    
-        
-            
+
+    box faceBox {
+      .move_up (BTNN),
+      .move_down (BTNS),
+      .move_left (BTNW),
+      .move_right (BTNE),
+      .mode (SW7),
+      .rst_n (SW6),
+      .x (x),
+      .y (y),
+      .draw_box (drawBox)
+    }
+
     assign group1 = {SW0,SW1,SW2,SW3};
     assign group2 = {SW4,SW5,SW6,SW7};
     assign {LD0,LD1,LD2,LD3} = group1 ^ group2;
-    
+
     drawNumber numDrawer1 (
                     .inNum  (isNum1),
                     .x      (x),
@@ -129,7 +142,7 @@ module mastermindVGA (
                     .posY   (100),
                     .value  (1)
                     );
-                    
+
     drawNumber numDrawer2 (
                     .inNum  (isNum2),
                     .x      (x),
@@ -138,7 +151,7 @@ module mastermindVGA (
                     .posY   (100),
                     .value  (0)
                     );
-    
+
     drawNumber numDrawer3 (
                     .inNum  (isNum3),
                     .x      (x),
@@ -147,7 +160,7 @@ module mastermindVGA (
                     .posY   (100),
                     .value  (5)
                     );
-    
+
     drawNumber numDrawer4 (
                     .inNum  (isNum4),
                     .x      (x),
@@ -156,7 +169,7 @@ module mastermindVGA (
                     .posY   (100),
                     .value  (4)
                     );
-    
+
     drawNumber numDrawer5 (
                 .inNum  (isNum5),
                 .x      (x),
@@ -165,8 +178,8 @@ module mastermindVGA (
                 .posY   (100),
                 .value  (5)
                 );
-    
-    
+
+
     /****************************************
      *          Store Game Info
      ****************************************/
