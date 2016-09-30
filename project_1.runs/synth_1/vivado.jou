@@ -2,9 +2,9 @@
 # Vivado v2015.2 (64-bit)
 # SW Build 1266856 on Fri Jun 26 16:35:25 MDT 2015
 # IP Build 1264090 on Wed Jun 24 14:22:01 MDT 2015
-# Start of session at: Tue Sep 20 16:16:36 2016
-# Process ID: 31543
-# Log file: /afs/ece.cmu.edu/usr/jacobwei/Public/project_1/project_1.runs/synth_1/mastermindVGA.vds
-# Journal file: /afs/ece.cmu.edu/usr/jacobwei/Public/project_1/project_1.runs/synth_1/vivado.jou
+# Start of session at: Fri Sep 30 11:25:22 2016
+# Process ID: 25605
+# Log file: /afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/project_1.runs/synth_1/box.vds
+# Journal file: /afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/project_1.runs/synth_1/vivado.jou
 #-----------------------------------------------------------
-source mastermindVGA.tcl -notrace
+source box.tcl -notrace

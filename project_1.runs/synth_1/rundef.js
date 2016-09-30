@@ -27,7 +27,7 @@ eval( EAInclude(ISEJScriptLib) );
 
 
 ISEStep( "vivado",
-         "-log mastermindVGA.vds -m64 -mode batch -messageDb vivado.pb -notrace -source mastermindVGA.tcl" );
+         "-log box.vds -m64 -mode batch -messageDb vivado.pb -notrace -source box.tcl" );
 
 
 
