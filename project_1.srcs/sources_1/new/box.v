@@ -34,7 +34,7 @@
 
 
 module box(
-    input logic move_up, move_down, move_left, move_right, middle, mode, rst_n,
+    input logic move_up, move_down, move_left, move_right, mode, rst_n,
     input  logic [9:0]  x, y,
     output logic draw_box
     );
