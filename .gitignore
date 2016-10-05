@@ -31,3 +31,8 @@
 # Debug files
 *.dSYM/
 *.su
+vivado.log
+vivado.jou
+vivado_pid*
+FPGA.cache
+FPGA.hw
