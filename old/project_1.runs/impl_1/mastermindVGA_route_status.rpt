@@ -1,0 +1,18 @@
+Design Route Status
+                                               :      # nets :
+   ------------------------------------------- : ----------- :
+   # of logical nets.......................... :        3514 :
+       # of nets not needing routing.......... :        1397 :
+           # of internally routed nets........ :        1315 :
+           # of nets with no loads............ :          82 :
+       # of routable nets..................... :        2116 :
+           # of fully routed nets............. :        2116 :
+       # of nets with routing errors.......... :           1 :
+           # of nets with some unplaced pins.. :           1 :
+   ------------------------------------------- : ----------- :
+
+
+Nets with Routing Errors:
+  clk
+    Unplaced Pin: nes_controller/clk
+

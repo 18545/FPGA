@@ -1,0 +1,565 @@
+#-----------------------------------------------------------
+# Vivado v2015.2 (64-bit)
+# SW Build 1266856 on Fri Jun 26 16:35:25 MDT 2015
+# IP Build 1264090 on Wed Jun 24 14:22:01 MDT 2015
+# Start of session at: Sun Oct  2 13:46:03 2016
+# Process ID: 30822
+# Log file: /afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/project_1.runs/synth_1/mastermindVGA.vds
+# Journal file: /afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/project_1.runs/synth_1/vivado.jou
+#-----------------------------------------------------------
+source mastermindVGA.tcl -notrace
+Command: synth_design -top mastermindVGA -part xc7z020clg484-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7z020'
+INFO: [Common 17-1223] The version limit for your license is '2016.07' and will expire in -63 days. A version limit expiration means that, although you may be able to continue to use the current version of tools or IP with this license, you will not be eligible for any updates or new releases.
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 1063.824 ; gain = 154.520 ; free physical = 9604 ; free virtual = 21228
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'mastermindVGA' [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:36]
+INFO: [Synth 8-5534] Detected attribute (* mark_debug = "true" *) [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:53]
+INFO: [Synth 8-638] synthesizing module 'vga' [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:191]
+INFO: [Synth 8-638] synthesizing module 'simple_counter' [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:282]
+	Parameter WIDTH bound to: 10 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'simple_counter' (1#1) [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:282]
+INFO: [Synth 8-638] synthesizing module 'simple_counter__parameterized0' [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:282]
+	Parameter WIDTH bound to: 11 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'simple_counter__parameterized0' (1#1) [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:282]
+INFO: [Synth 8-256] done synthesizing module 'vga' (2#1) [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:191]
+INFO: [Synth 8-638] synthesizing module 'nes_fsm' [/afs/ece.cmu.edu/usr/rmaratos/Downloads/nes-fsm3.vhd:21]
+INFO: [Synth 8-256] done synthesizing module 'nes_fsm' (3#1) [/afs/ece.cmu.edu/usr/rmaratos/Downloads/nes-fsm3.vhd:21]
+INFO: [Synth 8-638] synthesizing module 'box' [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/project_1.srcs/sources_1/new/box.sv:36]
+INFO: [Synth 8-638] synthesizing module 'up_down_counter' [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/project_1.srcs/sources_1/new/box.sv:70]
+	Parameter DEFAULT bound to: 160 - type: integer 
+	Parameter MAX bound to: 8'b01100100 
+	Parameter MIN bound to: 8'b00000101 
+INFO: [Synth 8-256] done synthesizing module 'up_down_counter' (4#1) [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/project_1.srcs/sources_1/new/box.sv:70]
+INFO: [Synth 8-638] synthesizing module 'up_down_counter__parameterized0' [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/project_1.srcs/sources_1/new/box.sv:70]
+	Parameter DEFAULT bound to: 120 - type: integer 
+	Parameter MAX bound to: 8'b01100100 
+	Parameter MIN bound to: 8'b00000101 
+INFO: [Synth 8-256] done synthesizing module 'up_down_counter__parameterized0' (4#1) [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/project_1.srcs/sources_1/new/box.sv:70]
+INFO: [Synth 8-638] synthesizing module 'up_down_counter__parameterized1' [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/project_1.srcs/sources_1/new/box.sv:70]
+	Parameter DEFAULT bound to: 320 - type: integer 
+	Parameter MAX bound to: 8'b01100100 
+	Parameter MIN bound to: 8'b00000101 
+INFO: [Synth 8-256] done synthesizing module 'up_down_counter__parameterized1' (4#1) [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/project_1.srcs/sources_1/new/box.sv:70]
+INFO: [Synth 8-638] synthesizing module 'up_down_counter__parameterized2' [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/project_1.srcs/sources_1/new/box.sv:70]
+	Parameter DEFAULT bound to: 240 - type: integer 
+	Parameter MAX bound to: 8'b01100100 
+	Parameter MIN bound to: 8'b00000101 
+INFO: [Synth 8-256] done synthesizing module 'up_down_counter__parameterized2' (4#1) [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/project_1.srcs/sources_1/new/box.sv:70]
+INFO: [Synth 8-256] done synthesizing module 'box' (5#1) [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/project_1.srcs/sources_1/new/box.sv:36]
+WARNING: [Synth 8-689] width (1) of port connection 'button_down' does not match port width (4) of module 'box' [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:128]
+INFO: [Synth 8-638] synthesizing module 'drawNumber' [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:298]
+	Parameter LINEWIDTH bound to: 10'b0000000100 
+	Parameter PADDING bound to: 10'b0000001010 
+	Parameter SIDE bound to: 10'b0000101010 
+INFO: [Synth 8-638] synthesizing module 'offset_check' [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:268]
+	Parameter WIDTH bound to: 10 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'offset_check' (6#1) [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:268]
+WARNING: [Synth 8-689] width (32) of port connection 'low' does not match port width (10) of module 'offset_check' [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:401]
+WARNING: [Synth 8-689] width (32) of port connection 'low' does not match port width (10) of module 'offset_check' [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:427]
+WARNING: [Synth 8-689] width (32) of port connection 'low' does not match port width (10) of module 'offset_check' [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:453]
+INFO: [Synth 8-155] case statement is not full and has no default [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:318]
+INFO: [Synth 8-256] done synthesizing module 'drawNumber' (7#1) [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:298]
+WARNING: [Synth 8-3848] Net LD3 in module/entity mastermindVGA does not have driver. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:45]
+INFO: [Synth 8-256] done synthesizing module 'mastermindVGA' (8#1) [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:36]
+WARNING: [Synth 8-3331] design mastermindVGA has unconnected port LD3
+WARNING: [Synth 8-3331] design mastermindVGA has unconnected port SW3
+WARNING: [Synth 8-3331] design mastermindVGA has unconnected port SW4
+WARNING: [Synth 8-3331] design mastermindVGA has unconnected port SW5
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 1100.113 ; gain = 190.809 ; free physical = 9566 ; free virtual = 21191
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 1100.113 ; gain = 190.809 ; free physical = 9565 ; free virtual = 21190
+---------------------------------------------------------------------------------
+INFO: [Device 21-403] Loading part xc7z020clg484-1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc]
+WARNING: [Vivado 12-584] No ports matched 'JA1'. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:219]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:219]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JA10'. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:220]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:220]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JA2'. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:221]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:221]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JA3'. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:222]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:222]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JA4'. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:223]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:223]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JA7'. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:224]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:224]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JA8'. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:225]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:225]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JA9'. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:226]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:226]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JB10'. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:234]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:234]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JB4'. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:237]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:237]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JB7'. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:238]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:238]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JB8'. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:239]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:239]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'JB9'. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:240]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc:240]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+Finished Parsing XDC File [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/zedboard_master_XDC_RevC_D_v3.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/mastermindVGA_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/mastermindVGA_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Completed Processing XDC Constraints
+
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 1450.926 ; gain = 0.000 ; free physical = 9279 ; free virtual = 20904
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1450.926 ; gain = 541.621 ; free physical = 9276 ; free virtual = 20901
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7z020clg484-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1450.926 ; gain = 541.621 ; free physical = 9276 ; free virtual = 20901
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1450.926 ; gain = 541.621 ; free physical = 9276 ; free virtual = 20901
+---------------------------------------------------------------------------------
+INFO: [Synth 8-802] inferred FSM for state register 'p_s_reg' in module 'nes_fsm'
+INFO: [Synth 8-5544] ROM "n_s" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "n_s" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "n_s" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "n_s" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "n_s" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "n_s" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "n_s" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "n_s" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "n_s" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "n_s" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "n_s" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "n_s" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "n_s" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "n_s" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "n_s" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "n_s" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "n_s" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-41] '_-' operator could not be merged with '+' operator due to loss of accuracy [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:274]
+INFO: [Synth 8-41] '_-' operator could not be merged with '+' operator due to loss of accuracy [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:274]
+INFO: [Synth 8-41] '_-' operator could not be merged with '+' operator due to loss of accuracy [/afs/ece.cmu.edu/usr/rmaratos/private/f16/545/FPGA/vga.sv:274]
+WARNING: [Synth 8-327] inferring latch for variable 'button_reg' [/afs/ece.cmu.edu/usr/rmaratos/Downloads/nes-fsm3.vhd:59]
+WARNING: [Synth 8-327] inferring latch for variable 'n_s_reg' [/afs/ece.cmu.edu/usr/rmaratos/Downloads/nes-fsm3.vhd:52]
+WARNING: [Synth 8-327] inferring latch for variable 'n_s_reg' [/afs/ece.cmu.edu/usr/rmaratos/Downloads/nes-fsm3.vhd:52]
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                     Old Encoding 
+---------------------------------------------------------------------------------------------------
+                       w |                            00000 |                            00000
+                      w0 |                            00001 |                            00001
+                      b0 |                            00010 |                            00010
+                      w1 |                            00011 |                            00011
+                      b1 |                            00100 |                            00100
+                      w2 |                            00101 |                            00101
+                      b2 |                            00110 |                            00110
+                      w3 |                            00111 |                            00111
+                      b3 |                            01000 |                            01000
+                      w4 |                            01001 |                            01001
+                      b4 |                            01010 |                            01010
+                      w5 |                            01011 |                            01011
+                      b5 |                            01100 |                            01100
+                      w6 |                            01101 |                            01101
+                      b6 |                            01110 |                            01110
+                      w7 |                            01111 |                            01111
+                      b7 |                            10000 |                            10000
+                      w8 |                            10001 |                            10001
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'p_s_reg' using encoding 'sequential' in module 'nes_fsm'
+WARNING: [Synth 8-327] inferring latch for variable 'FSM_sequential_n_s_reg' [/afs/ece.cmu.edu/usr/rmaratos/Downloads/nes-fsm3.vhd:52]
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1450.926 ; gain = 541.621 ; free physical = 9276 ; free virtual = 20901
+---------------------------------------------------------------------------------
+INFO: [Synth 8-223] decloning instance 'drawNumber:/segCheckX0' (offset_check) to 'drawNumber:/segCheckX3'
+INFO: [Synth 8-223] decloning instance 'drawNumber:/segCheckX0' (offset_check) to 'drawNumber:/segCheckX6'
+INFO: [Synth 8-223] decloning instance 'drawNumber:/segCheckX1' (offset_check) to 'drawNumber:/segCheckX2'
+INFO: [Synth 8-223] decloning instance 'drawNumber:/segCheckY1' (offset_check) to 'drawNumber:/segCheckY5'
+INFO: [Synth 8-223] decloning instance 'drawNumber:/segCheckY2' (offset_check) to 'drawNumber:/segCheckY4'
+INFO: [Synth 8-223] decloning instance 'drawNumber:/segCheckX4' (offset_check) to 'drawNumber:/segCheckX5'
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     12 Bit       Adders := 10    
+	   2 Input     11 Bit       Adders := 1     
+	   3 Input     11 Bit       Adders := 40    
+	   2 Input     10 Bit       Adders := 67    
+	   3 Input     10 Bit       Adders := 2     
++---Registers : 
+	               11 Bit    Registers := 1     
+	               10 Bit    Registers := 5     
+	                1 Bit    Registers := 5     
++---Muxes : 
+	   2 Input     11 Bit        Muxes := 1     
+	   2 Input     10 Bit        Muxes := 1     
+	  18 Input      8 Bit        Muxes := 2     
+	  18 Input      5 Bit        Muxes := 1     
+	  36 Input      5 Bit        Muxes := 1     
+	   2 Input      4 Bit        Muxes := 3     
+	   2 Input      2 Bit        Muxes := 4     
+	   2 Input      1 Bit        Muxes := 18    
+	  18 Input      1 Bit        Muxes := 2     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Hierarchical Component Statistics 
+---------------------------------------------------------------------------------
+Hierarchical RTL Component report 
+Module mastermindVGA 
+Detailed RTL Component Info : 
++---Registers : 
+	                1 Bit    Registers := 1     
++---Muxes : 
+	   2 Input      4 Bit        Muxes := 3     
+Module simple_counter 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     10 Bit       Adders := 1     
++---Registers : 
+	               10 Bit    Registers := 1     
++---Muxes : 
+	   2 Input     10 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 1     
+Module simple_counter__parameterized0 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     11 Bit       Adders := 1     
++---Registers : 
+	               11 Bit    Registers := 1     
++---Muxes : 
+	   2 Input     11 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 1     
+Module nes_fsm 
+Detailed RTL Component Info : 
++---Muxes : 
+	  18 Input      8 Bit        Muxes := 2     
+	  18 Input      5 Bit        Muxes := 1     
+	  36 Input      5 Bit        Muxes := 1     
+	  18 Input      1 Bit        Muxes := 2     
+Module up_down_counter 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     10 Bit       Adders := 1     
++---Registers : 
+	               10 Bit    Registers := 1     
+	                1 Bit    Registers := 1     
++---Muxes : 
+	   2 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 4     
+Module up_down_counter__parameterized0 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     10 Bit       Adders := 1     
++---Registers : 
+	               10 Bit    Registers := 1     
+	                1 Bit    Registers := 1     
++---Muxes : 
+	   2 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 4     
+Module up_down_counter__parameterized1 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     10 Bit       Adders := 1     
++---Registers : 
+	               10 Bit    Registers := 1     
+	                1 Bit    Registers := 1     
++---Muxes : 
+	   2 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 4     
+Module up_down_counter__parameterized2 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     10 Bit       Adders := 1     
++---Registers : 
+	               10 Bit    Registers := 1     
+	                1 Bit    Registers := 1     
++---Muxes : 
+	   2 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 4     
+Module box 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     10 Bit       Adders := 2     
+	   3 Input     10 Bit       Adders := 2     
+Module offset_check 
+Detailed RTL Component Info : 
++---Adders : 
+	   3 Input     11 Bit       Adders := 1     
+	   2 Input     10 Bit       Adders := 1     
+Module drawNumber 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     12 Bit       Adders := 2     
+	   2 Input     10 Bit       Adders := 4     
+---------------------------------------------------------------------------------
+Finished RTL Hierarchical Component Statistics
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 220 (col length:60)
+BRAMs: 280 (col length: RAMB18 60 RAMB36 30)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+Start Parallel Synthesis Optimization  : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1450.926 ; gain = 541.621 ; free physical = 9276 ; free virtual = 20901
+---------------------------------------------------------------------------------
+Start Cross Boundary Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-3331] design mastermindVGA has unconnected port LD3
+WARNING: [Synth 8-3331] design mastermindVGA has unconnected port SW3
+WARNING: [Synth 8-3331] design mastermindVGA has unconnected port SW4
+WARNING: [Synth 8-3331] design mastermindVGA has unconnected port SW5
+---------------------------------------------------------------------------------
+Finished Cross Boundary Optimization : Time (s): cpu = 00:00:13 ; elapsed = 00:00:14 . Memory (MB): peak = 1450.926 ; gain = 541.621 ; free physical = 9278 ; free virtual = 20903
+---------------------------------------------------------------------------------
+Finished Parallel Reinference  : Time (s): cpu = 00:00:13 ; elapsed = 00:00:14 . Memory (MB): peak = 1450.926 ; gain = 541.621 ; free physical = 9278 ; free virtual = 20903
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+WARNING: [Synth 8-3332] Sequential element (\button_reg[7] ) is unused and will be removed from module nes_fsm.
+WARNING: [Synth 8-3332] Sequential element (\button_reg[6] ) is unused and will be removed from module nes_fsm.
+WARNING: [Synth 8-3332] Sequential element (\button_reg[5] ) is unused and will be removed from module nes_fsm.
+WARNING: [Synth 8-3332] Sequential element (\button_reg[4] ) is unused and will be removed from module nes_fsm.
+WARNING: [Synth 8-3332] Sequential element (\button_reg[3] ) is unused and will be removed from module nes_fsm.
+WARNING: [Synth 8-3332] Sequential element (\button_reg[2] ) is unused and will be removed from module nes_fsm.
+WARNING: [Synth 8-3332] Sequential element (\button_reg[1] ) is unused and will be removed from module nes_fsm.
+WARNING: [Synth 8-3332] Sequential element (\button_reg[0] ) is unused and will be removed from module nes_fsm.
+---------------------------------------------------------------------------------
+Start Area Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Area Optimization : Time (s): cpu = 00:00:13 ; elapsed = 00:00:14 . Memory (MB): peak = 1450.926 ; gain = 541.621 ; free physical = 9278 ; free virtual = 20903
+---------------------------------------------------------------------------------
+Finished Parallel Area Optimization  : Time (s): cpu = 00:00:13 ; elapsed = 00:00:14 . Memory (MB): peak = 1450.926 ; gain = 541.621 ; free physical = 9278 ; free virtual = 20903
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+Finished Parallel Synthesis Optimization  : Time (s): cpu = 00:00:13 ; elapsed = 00:00:14 . Memory (MB): peak = 1450.926 ; gain = 541.621 ; free physical = 9278 ; free virtual = 20903
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 1450.926 ; gain = 541.621 ; free physical = 9221 ; free virtual = 20846
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 1450.926 ; gain = 541.621 ; free physical = 9221 ; free virtual = 20846
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 1450.926 ; gain = 541.621 ; free physical = 9217 ; free virtual = 20842
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-3295] tying undriven pin nes_controller:data to constant 0
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:21 ; elapsed = 00:00:23 . Memory (MB): peak = 1450.926 ; gain = 541.621 ; free physical = 9217 ; free virtual = 20842
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:21 ; elapsed = 00:00:23 . Memory (MB): peak = 1450.926 ; gain = 541.621 ; free physical = 9217 ; free virtual = 20842
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:21 ; elapsed = 00:00:23 . Memory (MB): peak = 1450.926 ; gain = 541.621 ; free physical = 9217 ; free virtual = 20842
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports : Time (s): cpu = 00:00:21 ; elapsed = 00:00:23 . Memory (MB): peak = 1450.926 ; gain = 541.621 ; free physical = 9217 ; free virtual = 20842
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 1450.926 ; gain = 541.621 ; free physical = 9217 ; free virtual = 20842
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+-------+------+
+|      |Cell   |Count |
++------+-------+------+
+|1     |BUFG   |     2|
+|2     |CARRY4 |   201|
+|3     |LUT1   |   340|
+|4     |LUT2   |   354|
+|5     |LUT3   |    11|
+|6     |LUT4   |    51|
+|7     |LUT5   |    26|
+|8     |LUT6   |    49|
+|9     |FDCE   |    22|
+|10    |FDRE   |    37|
+|11    |FDSE   |    12|
+|12    |LD     |     5|
+|13    |IBUF   |    14|
+|14    |OBUF   |    17|
+|15    |OBUFT  |     1|
++------+-------+------+
+
+Report Instance Areas: 
++------+-------------------+--------------------------------+------+
+|      |Instance           |Module                          |Cells |
++------+-------------------+--------------------------------+------+
+|1     |top                |                                |  1142|
+|2     |  nes_controller   |nes_fsm                         |    17|
+|3     |  faceBox          |box                             |   212|
+|4     |    c_x_counter    |up_down_counter__parameterized1 |    32|
+|5     |    c_y_counter    |up_down_counter__parameterized2 |    33|
+|6     |    height_counter |up_down_counter__parameterized0 |    42|
+|7     |    width_counter  |up_down_counter                 |    42|
+|8     |  numDrawer1       |drawNumber                      |    16|
+|9     |    segCheckX1     |offset_check_33                 |     6|
+|10    |    segCheckY1     |offset_check_34                 |     5|
+|11    |    segCheckY2     |offset_check_35                 |     5|
+|12    |  numDrawer2       |drawNumber_0                    |    47|
+|13    |    segCheckX0     |offset_check_25                 |     6|
+|14    |    segCheckX1     |offset_check_26                 |     6|
+|15    |    segCheckX4     |offset_check_27                 |     7|
+|16    |    segCheckY0     |offset_check_28                 |     5|
+|17    |    segCheckY1     |offset_check_29                 |     6|
+|18    |    segCheckY2     |offset_check_30                 |     5|
+|19    |    segCheckY3     |offset_check_31                 |     6|
+|20    |    segCheckY6     |offset_check_32                 |     6|
+|21    |  numDrawer3       |drawNumber_1                    |    43|
+|22    |    segCheckX0     |offset_check_17                 |     5|
+|23    |    segCheckX1     |offset_check_18                 |     6|
+|24    |    segCheckX4     |offset_check_19                 |     6|
+|25    |    segCheckY0     |offset_check_20                 |     6|
+|26    |    segCheckY1     |offset_check_21                 |     5|
+|27    |    segCheckY2     |offset_check_22                 |     5|
+|28    |    segCheckY3     |offset_check_23                 |     5|
+|29    |    segCheckY6     |offset_check_24                 |     5|
+|30    |  numDrawer4       |drawNumber_2                    |    34|
+|31    |    segCheckX0     |offset_check_11                 |     5|
+|32    |    segCheckX1     |offset_check_12                 |     5|
+|33    |    segCheckX4     |offset_check_13                 |     6|
+|34    |    segCheckY1     |offset_check_14                 |     6|
+|35    |    segCheckY2     |offset_check_15                 |     6|
+|36    |    segCheckY6     |offset_check_16                 |     6|
+|37    |  numDrawer5       |drawNumber_3                    |    43|
+|38    |    segCheckX0     |offset_check                    |     7|
+|39    |    segCheckX1     |offset_check_4                  |     3|
+|40    |    segCheckX4     |offset_check_5                  |     5|
+|41    |    segCheckY0     |offset_check_6                  |     6|
+|42    |    segCheckY1     |offset_check_7                  |     6|
+|43    |    segCheckY2     |offset_check_8                  |     6|
+|44    |    segCheckY3     |offset_check_9                  |     5|
+|45    |    segCheckY6     |offset_check_10                 |     5|
+|46    |  vgaCounter       |vga                             |   694|
+|47    |    col_counter    |simple_counter__parameterized0  |   295|
+|48    |    row_counter    |simple_counter                  |   399|
++------+-------------------+--------------------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 1450.926 ; gain = 541.621 ; free physical = 9217 ; free virtual = 20842
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 17 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:15 ; elapsed = 00:00:15 . Memory (MB): peak = 1450.926 ; gain = 74.289 ; free physical = 9217 ; free virtual = 20842
+Synthesis Optimization Complete : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 1450.926 ; gain = 541.621 ; free physical = 9217 ; free virtual = 20842
+INFO: [Project 1-571] Translating synthesized netlist
+INFO: [Netlist 29-17] Analyzing 220 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 5 instances were transformed.
+  LD => LDCE: 5 instances
+
+INFO: [Common 17-83] Releasing license: Synthesis
+67 Infos, 39 Warnings, 13 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:20 ; elapsed = 00:00:21 . Memory (MB): peak = 1455.941 ; gain = 438.117 ; free physical = 9216 ; free virtual = 20840
+report_utilization: Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.09 . Memory (MB): peak = 1487.961 ; gain = 0.000 ; free physical = 9214 ; free virtual = 20839
+INFO: [Common 17-206] Exiting Vivado at Sun Oct  2 13:46:31 2016...

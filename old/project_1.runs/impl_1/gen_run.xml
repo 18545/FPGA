@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenRun Id="impl_1" LaunchPart="xc7z020clg484-1" LaunchTime="1475430363">
+  <File Type="RUN-CONSTRS" Name="$PDATADIR/runs/impl_1/constrs_in.xml"/>
+  <File Type="RUN-SRCS" Name="$PDATADIR/runs/impl_1/sources.xml"/>
+  <File Type="RUN-STRAT" Name="$PDATADIR/runs/impl_1/impl_1.psg"/>
+  <File Type="PA-TCL" Name="mastermindVGA.tcl"/>
+  <File Type="POSTROUTE-PHYSOPT-TIMING-PB" Name="mastermindVGA_timing_summary_postroute_physopted.pb"/>
+  <File Type="OPT-DCP" Name="mastermindVGA_opt.dcp"/>
+  <File Type="OPT-DRC" Name="mastermindVGA_drc_opted.rpt"/>
+  <File Type="OPT-HWDEF" Name="mastermindVGA.hwdef"/>
+  <File Type="PWROPT-DCP" Name="mastermindVGA_pwropt.dcp"/>
+  <File Type="PWROPT-DRC" Name="mastermindVGA_drc_pwropted.rpt"/>
+  <File Type="PLACE-DCP" Name="mastermindVGA_placed.dcp"/>
+  <File Type="PLACE-IO" Name="mastermindVGA_io_placed.rpt"/>
+  <File Type="POSTROUTE-PHYSOPT-TIMING" Name="mastermindVGA_timing_summary_postroute_physopted.rpt"/>
+  <File Type="BG-BIT" Name="mastermindVGA.bit"/>
+  <File Type="ROUTE-TIMING-RPX" Name="mastermindVGA_timing_summary_routed.rpx"/>
+  <File Type="BG-BIN" Name="mastermindVGA.bin"/>
+  <File Type="BITSTR-MSK" Name="mastermindVGA.msk"/>
+  <File Type="ROUTE-CLK" Name="mastermindVGA_clock_utilization_routed.rpt"/>
+  <File Type="BG-BGN" Name="mastermindVGA.bgn"/>
+  <File Type="BITSTR-RBT" Name="mastermindVGA.rbt"/>
+  <File Type="BITSTR-NKY" Name="mastermindVGA.nky"/>
+  <File Type="POSTPLACE-PWROPT-DCP" Name="mastermindVGA_postplace_pwropt.dcp"/>
+  <File Type="BITSTR-BMM" Name="mastermindVGA_bd.bmm"/>
+  <File Type="POSTROUTE-PHYSOPT-TIMING-RPX" Name="mastermindVGA_timing_summary_postroute_physopted.rpx"/>
+  <File Type="WBT-USG" Name="usage_statistics_webtalk.html"/>
+  <File Type="RDI-RDI" Name="mastermindVGA.vdi"/>
+  <File Type="POSTROUTE-PHYSOPT-DCP" Name="mastermindVGA_postroute_physopt.dcp"/>
+  <File Type="BG-DRC" Name="mastermindVGA.drc"/>
+  <File Type="ROUTE-SIMILARITY" Name="mastermindVGA_incremental_reuse_routed.rpt"/>
+  <File Type="BITSTR-MMI" Name="mastermindVGA.mmi"/>
+  <File Type="PHYSOPT-DCP" Name="mastermindVGA_physopt.dcp"/>
+  <File Type="BITSTR-SYSDEF" Name="mastermindVGA.sysdef"/>
+  <File Type="PHYSOPT-DRC" Name="mastermindVGA_drc_physopted.rpt"/>
+  <File Type="ROUTE-TIMING-PB" Name="mastermindVGA_timing_summary_routed.pb"/>
+  <File Type="ROUTE-TIMINGSUMMARY" Name="mastermindVGA_timing_summary_routed.rpt"/>
+  <File Type="ROUTE-STATUS-PB" Name="mastermindVGA_route_status.pb"/>
+  <File Type="ROUTE-STATUS" Name="mastermindVGA_route_status.rpt"/>
+  <File Type="ROUTE-PWR-SUM" Name="mastermindVGA_power_summary_routed.pb"/>
+  <File Type="ROUTE-PWR" Name="mastermindVGA_power_routed.rpt"/>
+  <File Type="ROUTE-DRC-PB" Name="mastermindVGA_drc_routed.pb"/>
+  <File Type="ROUTE-DRC" Name="mastermindVGA_drc_routed.rpt"/>
+  <File Type="ROUTE-DCP" Name="mastermindVGA_routed.dcp"/>
+  <File Type="PLACE-PRE-SIMILARITY" Name="mastermindVGA_incremental_reuse_pre_placed.rpt"/>
+  <File Type="PLACE-SIMILARITY" Name="mastermindVGA_incremental_reuse_placed.rpt"/>
+  <File Type="PLACE-CTRL" Name="mastermindVGA_control_sets_placed.rpt"/>
+  <File Type="PLACE-UTIL-PB" Name="mastermindVGA_utilization_placed.pb"/>
+  <File Type="PLACE-UTIL" Name="mastermindVGA_utilization_placed.rpt"/>
+  <File Type="PLACE-CLK" Name="mastermindVGA_clock_utilization_placed.rpt"/>
+  <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1">
+    <Filter Type="Srcs"/>
+    <File Path="$PPRDIR/../../../../Downloads/nes-fsm3.vhd">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/box.sv">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/vga.sv">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="DesignMode" Val="RTL"/>
+      <Option Name="TopModule" Val="mastermindVGA"/>
+      <Option Name="TopAutoSet" Val="TRUE"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="constrs_in" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1">
+    <Filter Type="Constrs"/>
+    <File Path="$PPRDIR/zedboard_master_XDC_RevC_D_v3.xdc">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="TargetConstrsFile" Val="$PPRDIR/zedboard_master_XDC_RevC_D_v3.xdc"/>
+      <Option Name="ConstrsType" Val="XDC"/>
+    </Config>
+  </FileSet>
+  <Strategy Version="1" Minor="2">
+    <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2015"/>
+    <Step Id="init_design"/>
+    <Step Id="opt_design"/>
+    <Step Id="power_opt_design"/>
+    <Step Id="place_design"/>
+    <Step Id="post_place_power_opt_design"/>
+    <Step Id="phys_opt_design"/>
+    <Step Id="route_design"/>
+    <Step Id="post_route_phys_opt_design"/>
+    <Step Id="write_bitstream"/>
+  </Strategy>
+</GenRun>
