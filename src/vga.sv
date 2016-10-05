@@ -35,14 +35,24 @@ typedef enum logic [2:0] {
 
 module mastermindVGA (
     input  logic        GCLK,
-    input  logic        BTNC, BTND, BTNU, BTNL, BTNR,
+    input  logic        BTNC, BTND, BTNU, BTNL, BTNR, BTN8,
     input logic SW0,SW1,SW2,SW3,SW4,SW5,SW6,SW7,
+    output logic OV7670_SIOC,    
+    inout  logic OV7670_SIOD,  
+    output OV7670_SIOC,
+    output OV7670_RESET,  
+    output OV7670_PWDN,  
+    input  OV7670_VSYNC,  
+    input logic OV7670_HREF,       
+    input logic OV7670_PCLK, 
+    output logic OV7670_XCLK,
+    input logic [7:0] OV7670_D,
 
     output logic        VGA_VS, VGA_HS,
     output logic VGA_B1, VGA_B2, VGA_B3, VGA_B4,
     output logic VGA_G1, VGA_G2, VGA_G3, VGA_G4,
     output logic VGA_R1, VGA_R2, VGA_R3, VGA_R4,
-    output logic LD0,LD1,LD2,LD3
+    output logic LD0,LD1,LD2,LD3, LD7,
     );
 
     /****************************************
@@ -162,6 +172,27 @@ module mastermindVGA (
                 .posX   (300),
                 .posY   (100),
                 .value  (5)
+                );
+
+    
+    /*Instantiating VHDL camera modules*/
+    logic resend, config_finished;
+    assign LD7 = config_finished;
+    debounce db (
+                .clk(GCLK),
+                .i(BTN8),
+                .o(resend)
+                );
+
+    ov7670_controller controller (
+                .clk(GCLK),
+                .resend(resend),
+                .config_finished(config_finished),
+                .siod(),
+                .sioc(),
+                .reset(),
+                .pwdn(),
+                .xclk()
                 );
 
 endmodule: mastermindVGA

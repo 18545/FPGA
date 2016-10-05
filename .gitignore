@@ -38,3 +38,4 @@ FPGA.cache
 FPGA.hw
 *.jou
 *.log
+FPGA.runs
