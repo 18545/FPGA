@@ -4,7 +4,7 @@
  *  BRIEF
  *  Module that acts an an interface for the VGA output.
  *  AUTHOR of VGA code
- *  Anita Zhang (anitazha)
+ *  Anita Zhang 2 (anitazha)
  */
 
 /****** File-wide Colors ***********/
