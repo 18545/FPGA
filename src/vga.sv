@@ -35,11 +35,10 @@ typedef enum logic [2:0] {
 
 module mastermindVGA (
     input  logic        GCLK,
-    input  logic        BTNC, BTND, BTNU, BTNL, BTNR, BTN8,
+    input  logic        BTNC, BTND, BTNU, BTNL, BTNR,
     input logic SW0,SW1,SW2,SW3,SW4,SW5,SW6,SW7,
     output logic OV7670_SIOC,    
-    inout  logic OV7670_SIOD,  
-    output OV7670_SIOC,
+    inout  logic OV7670_SIOD, 
     output OV7670_RESET,  
     output OV7670_PWDN,  
     input  OV7670_VSYNC,  
@@ -52,7 +51,7 @@ module mastermindVGA (
     output logic VGA_B1, VGA_B2, VGA_B3, VGA_B4,
     output logic VGA_G1, VGA_G2, VGA_G3, VGA_G4,
     output logic VGA_R1, VGA_R2, VGA_R3, VGA_R4,
-    output logic LD0,LD1,LD2,LD3, LD7,
+    output logic LD0,LD1,LD2,LD3, LD7
     );
 
     /****************************************
@@ -61,7 +60,7 @@ module mastermindVGA (
 
     // other
     (* mark_debug = "true" *) logic                 clk;
-    logic clk_50, clk_25,blank;
+    logic clk_50, clk_25,blank, clk_100;
     logic [9:0] x, y;
     logic [3:0] group1,group2;
     logic [3:0] red,green,blue;
@@ -75,11 +74,16 @@ module mastermindVGA (
         else clk_50 <= ~clk_50;
     end
 
+    always_ff @(posedge clk_50, posedge reset) begin
+        if (reset) clk_25 <= 0;
+        else clk_25 <= ~clk_25;
+    end
+
     /****************************************
      *       VGA data
      ****************************************/
 
-    vga vgaCounter (
+    vga2 vgaCounter (
             .row        (y),
             .col        (x),
             .HS         (VGA_HS),
@@ -87,10 +91,29 @@ module mastermindVGA (
             .blank      (blank),
             .clk_50     (clk_50),
             .reset      (reset));
+    
+    assign clk_100 = GCLK;
+    // clking clockgen (
+    //         .CLK_100(clk_100),
+    //         .CLK_50(clk_50),
+    //         .CLK_25(clk_25)
+    //         );
 
-    assign {VGA_B1, VGA_B2, VGA_B3, VGA_B4} = blue;
-    assign {VGA_G1, VGA_G2, VGA_G3, VGA_G4} = green;
-    assign {VGA_R1, VGA_R2, VGA_R3, VGA_R4} = red;
+    // vga vgaVHD (
+    //         .clk25(clk_25),
+    //         .vga_red(red),
+    //         .vga_green(green),
+    //         .vga_blue(blue),
+    //         .vga_hsync(VGA_HS),
+    //         .vga_vsync(VGA_VS),
+    //         .frame_addr(frame_addr),
+    //         .frame_pixel(frame_pixel)
+    //         );
+    logic [3:0] grayscale;
+    assign grayscale = (blue + green + red)/3;
+    assign {VGA_B4, VGA_B3, VGA_B2, VGA_B1} = (SW1) ? grayscale : blue;
+    assign {VGA_G4, VGA_G3, VGA_G2, VGA_G1} = (SW1) ? grayscale : green;
+    assign {VGA_R4, VGA_R3, VGA_R2, VGA_R1} = (SW1) ? grayscale : red;
 
     logic isNum1, isNum2, isNum3, isNum4, isNum5;
 
@@ -107,9 +130,9 @@ module mastermindVGA (
             green =  4'hf;
             red =  4'hf;
         end else begin
-            blue = (SW2) ? 4'hf : 4'h0;
-            green = (SW1) ? 4'hf : 4'h0;
-            red = (SW0) ? 4'hf : 4'h0;
+            blue = frame_pixel[11:8];
+            green = frame_pixel[7:4];
+            red = frame_pixel[3:0];
         end
     end
 
@@ -179,20 +202,46 @@ module mastermindVGA (
     logic resend, config_finished;
     assign LD7 = config_finished;
     debounce db (
-                .clk(GCLK),
-                .i(BTN8),
+                .clk(clk_50),
+                .i(SW0),
                 .o(resend)
                 );
 
     ov7670_controller controller (
-                .clk(GCLK),
+                .clk(clk_50),
                 .resend(resend),
                 .config_finished(config_finished),
-                .siod(),
-                .sioc(),
-                .reset(),
-                .pwdn(),
-                .xclk()
+                .siod(OV7670_SIOD),
+                .sioc(OV7670_SIOC),
+                .reset(OV7670_RESET),
+                .pwdn(OV7670_PWDN),
+                .xclk(OV7670_XCLK)
+                );
+
+    logic capture_we;
+    logic [18:0] capture_addr, frame_addr;
+    logic [11:0] capture_data, frame_pixel;
+
+    assign frame_addr = y*640 + x;
+
+    blk_mem_gen_0 mem_gen (
+                .clka(OV7670_PCLK),
+                .wea(capture_we),
+                .addra(capture_addr),
+                .dina(capture_data),
+                .clkb(clk_50),
+                .addrb(frame_addr),
+                .doutb(frame_pixel)
+                );
+
+    ov7670_capture capture (
+                .pclk(OV7670_PCLK),
+                .vsync(OV7670_VSYNC),
+                .href(OV7670_HREF),
+                .d(OV7670_D),
+                .addr(capture_addr),
+                .dout(capture_data),
+                .we(capture_we)
                 );
 
 endmodule: mastermindVGA
@@ -210,7 +259,7 @@ endmodule: mastermindVGA
  *
  *  Requires the Library.sv modules to work. Supports 640 x 480 px.
  */
-module vga (
+module vga2 (
     output logic [9:0] row, col,
     output logic       HS, VS, blank,
     input  logic       clk_50, reset
@@ -263,7 +312,7 @@ module vga (
     assign h_blank    = col_count > 11'd1279;
 
     assign blank      = h_blank | v_blank;
-endmodule: vga
+endmodule: vga2
 
 /*****************************************************************
  *
