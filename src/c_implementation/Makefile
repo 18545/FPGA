@@ -1,2 +1,2 @@
 make: main.c
-	gcc -o pngtest -I -std=c99 -lpng -ljpeg -lz main.c 
+  gcc -o pngtest -std=c99 -lpng main.c
