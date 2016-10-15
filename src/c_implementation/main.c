@@ -4,10 +4,10 @@
 #include <png.h>
 
 #define PNG_DEBUG 3
-#define X_MIN 50
-#define X_MAX 250
-#define Y_MIN 50
-#define Y_MAX 250
+#define X_MIN 90
+#define X_MAX 180
+#define Y_MIN 80
+#define Y_MAX 170
 
 
 extern int width, height;
@@ -19,12 +19,30 @@ void blue(png_bytep * row_pointers)
     png_byte* row = row_pointers[y];
     for (x=0; x<width; x++) {
       png_byte* ptr = &(row[x*4]);
-      printf("Pixel at position [ %d - %d ] has RGBA values: %d - %d - %d - %d\n",
-             x, y, ptr[0], ptr[1], ptr[2], ptr[3]);
+      // printf("Pixel at position [ %d - %d ] has RGBA values: %d - %d - %d - %d\n",
+      //  x, y, ptr[0], ptr[1], ptr[2], ptr[3]);
 
       /* set red value to 0 and green value to the blue one */
       ptr[0] = 0;
       ptr[1] = ptr[2];
+    }
+  }
+}
+
+void greyscale(png_bytep * row_pointers) {
+  int x, y;
+  for (y=0; y<height; y++) {
+    png_byte* row = row_pointers[y];
+    for (x=0; x<width; x++) {
+      png_byte* ptr = &(row[x*4]);
+      // printf("Pixel at position [ %d - %d ] has RGBA values: %d - %d - %d - %d\n",
+      //   x, y, ptr[0], ptr[1], ptr[2], ptr[3]);
+
+      /* set red value to 0 and green value to the blue one */
+      int average = (ptr[0] + ptr[1] + ptr[2]) / 3;
+      ptr[0] = average;
+      ptr[1] = average;
+      ptr[2] = average;
     }
   }
 }
@@ -42,8 +60,8 @@ void box(png_bytep * row_pointers)
     png_byte* row = row_pointers[y];
     for (x=0; x<width; x++) {
       png_byte* ptr = &(row[x*4]);
-      printf("Pixel at position [ %d - %d ] has RGBA values: %d - %d - %d - %d\n",
-             x, y, ptr[0], ptr[1], ptr[2], ptr[3]);
+      // printf("Pixel at position [ %d - %d ] has RGBA values: %d - %d - %d - %d\n",
+      //        x, y, ptr[0], ptr[1], ptr[2], ptr[3]);
 
       /* set red value to 0 and green value to the blue one */
       if (in_box(x, y)) {
@@ -114,19 +132,25 @@ void box(png_bytep * row_pointers)
 //   }
 // }
 
+
+
 int main(int argc, char **argv)
 {
-  if (argc != 3)
-    abort_("Usage: program_name <file_in> <file_out>");
+  if (argc != 4)
+    abort_("Usage: program_name <file_in_1> <file_in_2> <file_out_1");
 
   // READ IN PNG FILE
-  png_bytep *row_pointers = read_png_file(argv[1]);
+  png_bytep *image1 = read_png_file(argv[1]);
+  png_bytep *image2 = read_png_file(argv[2]);
 
   // ADD MORE EFFECTS HERE
-  blue(row_pointers);
-  box(row_pointers);
+  // blue(row_pointers);
+  greyscale(image1);
+  box(image1);
+  greyscale(image2);
+  box(image2);
 
   // WRITE OUT EDITED PNG FILE
-  write_png_file(row_pointers, argv[2]);
+  write_png_file(image2, argv[3]);
   return 0;
 }

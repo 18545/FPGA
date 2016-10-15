@@ -12,9 +12,9 @@ pngtest: main.c pnglib.c
 	$(CC) $(CFLAGS) $(LIBS) -o pngtest main.c pnglib.c
 
 run:
-	./pngtest carnegie.png carnegie2.png
-	open carnegie.png
-	open carnegie2.png
+	./pngtest red1.png red2.png red2_out.png
+	open red1.png
+	open red2_out.png
 
 clean:
 	rm -f *.o pngtest

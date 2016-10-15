@@ -73,7 +73,7 @@ png_bytep * read_png_file(char* file_name)
     abort_("[read_png_file] Error during read_image");
 
   png_bytep * row_pointers = (png_bytep*) malloc(sizeof(png_bytep) * height);
-  for (y=0; y<height; y++)
+  for (int y=0; y<height; y++)
     row_pointers[y] = (png_byte*) malloc(png_get_rowbytes(png_ptr,info_ptr));
 
   png_read_image(png_ptr, row_pointers);
@@ -105,7 +105,7 @@ void write_png_file(png_bytep * row_pointers, char* file_name)
   if (!png_ptr)
     abort_("[write_png_file] png_create_write_struct failed");
 
-  info_ptr = png_create_info_struct(png_ptr);
+  png_infop info_ptr = png_create_info_struct(png_ptr);
   if (!info_ptr)
     abort_("[write_png_file] png_create_info_struct failed");
 
@@ -140,7 +140,7 @@ void write_png_file(png_bytep * row_pointers, char* file_name)
   png_write_end(png_ptr, NULL);
 
   /* cleanup heap allocation */
-  for (y=0; y<height; y++)
+  for (int y=0; y<height; y++)
     free(row_pointers[y]);
   free(row_pointers);
 
