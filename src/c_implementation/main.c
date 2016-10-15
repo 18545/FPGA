@@ -16,16 +16,16 @@ void blue(png_bytep * row_pointers)
 {
   int x, y;
   for (y=0; y<height; y++) {
-          png_byte* row = row_pointers[y];
-          for (x=0; x<width; x++) {
-                  png_byte* ptr = &(row[x*4]);
-                  printf("Pixel at position [ %d - %d ] has RGBA values: %d - %d - %d - %d\n",
-                         x, y, ptr[0], ptr[1], ptr[2], ptr[3]);
+    png_byte* row = row_pointers[y];
+    for (x=0; x<width; x++) {
+      png_byte* ptr = &(row[x*4]);
+      printf("Pixel at position [ %d - %d ] has RGBA values: %d - %d - %d - %d\n",
+             x, y, ptr[0], ptr[1], ptr[2], ptr[3]);
 
-                  /* set red value to 0 and green value to the blue one */
-                  ptr[0] = 0;
-                  ptr[1] = ptr[2];
-          }
+      /* set red value to 0 and green value to the blue one */
+      ptr[0] = 0;
+      ptr[1] = ptr[2];
+    }
   }
 }
 
@@ -39,22 +39,21 @@ void box(png_bytep * row_pointers)
   int x, y;
 
   for (y=0; y<height; y++) {
-          png_byte* row = row_pointers[y];
-          for (x=0; x<width; x++) {
-                  png_byte* ptr = &(row[x*4]);
-                  printf("Pixel at position [ %d - %d ] has RGBA values: %d - %d - %d - %d\n",
-                         x, y, ptr[0], ptr[1], ptr[2], ptr[3]);
+    png_byte* row = row_pointers[y];
+    for (x=0; x<width; x++) {
+      png_byte* ptr = &(row[x*4]);
+      printf("Pixel at position [ %d - %d ] has RGBA values: %d - %d - %d - %d\n",
+             x, y, ptr[0], ptr[1], ptr[2], ptr[3]);
 
-                  /* set red value to 0 and green value to the blue one */
-                  if (in_box(x, y)) {
-                    // printf("Setting value to 0\n");
-                    ptr[0] = 0;
-                    ptr[1] = 0;
-                    ptr[2] = 0;
-                    ptr[3] = 0;
-                  }
-
-          }
+      /* set red value to 0 and green value to the blue one */
+      if (in_box(x, y)) {
+        // printf("Setting value to 0\n");
+        ptr[0] = 0;
+        ptr[1] = 0;
+        ptr[2] = 0;
+        ptr[3] = 0;
+      }
+    }
   }
 }
 //
