@@ -30,9 +30,10 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/src/ov7670_controller.vhd">
+      <File Path="$PPRDIR/src/box.sv">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
@@ -71,7 +72,7 @@
       </File>
       <File Path="$PPRDIR/src/vga.vhd">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UserDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
@@ -93,8 +94,8 @@
       <Filter Type="Constrs"/>
       <File Path="$PSRCDIR/constrs_1/imports/Downloads/zed_board.xdc">
         <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../../Downloads/zed_board.xdc"/>
-          <Attr Name="ImportTime" Val="1475681752"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../../../../Desktop/zed_board.xdc"/>
+          <Attr Name="ImportTime" Val="1476113702"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
         </FileInfo>
