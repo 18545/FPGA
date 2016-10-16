@@ -109,11 +109,13 @@ module mastermindVGA (
     //         .frame_addr(frame_addr),
     //         .frame_pixel(frame_pixel)
     //         );
-    logic [3:0] grayscale;
-    assign grayscale = (blue + green + red)/3;
-    assign {VGA_B4, VGA_B3, VGA_B2, VGA_B1} = (SW1) ? grayscale : blue;
-    assign {VGA_G4, VGA_G3, VGA_G2, VGA_G1} = (SW1) ? grayscale : green;
-    assign {VGA_R4, VGA_R3, VGA_R2, VGA_R1} = (SW1) ? grayscale : red;
+    //logic [3:0] grayscale;
+    //assign grayscale = (blue + green + red)/3;
+    
+    //grayscaled
+    assign {VGA_B4, VGA_B3, VGA_B2, VGA_B1} = blue;
+    assign {VGA_G4, VGA_G3, VGA_G2, VGA_G1} = green;
+    assign {VGA_R4, VGA_R3, VGA_R2, VGA_R1} = red;
 
     logic isNum1, isNum2, isNum3, isNum4, isNum5;
 
@@ -125,14 +127,14 @@ module mastermindVGA (
             blue =  4'h0;
             green =  4'h0;
             red =  4'h0;
-        end else if(isNum1 | isNum2 | isNum3 | isNum4 | isNum5 | drawBox) begin
+        end else if(drawBox) begin
             blue =  4'hf;
             green =  4'hf;
             red =  4'hf;
         end else begin
-            blue = frame_pixel[11:8];
-            green = frame_pixel[7:4];
-            red = frame_pixel[3:0];
+            blue = frame_pixel_display[11:8];
+            green = frame_pixel_display[7:4];
+            red = frame_pixel_display[3:0];
         end
     end
 
@@ -218,21 +220,41 @@ module mastermindVGA (
                 .xclk(OV7670_XCLK)
                 );
 
-    logic capture_we;
+    logic capture_we, capture_static;
     logic [18:0] capture_addr, frame_addr;
-    logic [11:0] capture_data, frame_pixel;
-
+    logic [11:0] capture_data, frame_pixel_live, frame_pixel_static, frame_pixel_display;
+    logic [3:0] capture_data_grayscale;
+    
+    assign capture_data_grayscale = (capture_data[11:8] + capture_data[7:4] + capture_data[3:0])/3;
+    
     assign frame_addr = y*640 + x;
+
+    assign frame_pixel_display = (SW2) ? frame_pixel_static : frame_pixel_live;
+
 
     blk_mem_gen_0 mem_gen (
                 .clka(OV7670_PCLK),
                 .wea(capture_we),
                 .addra(capture_addr),
-                .dina(capture_data),
+                .dina(capture_data_grayscale),
                 .clkb(clk_50),
                 .addrb(frame_addr),
-                .doutb(frame_pixel)
+                .doutb(frame_pixel_live)
                 );
+
+    assign capture_static = capture_we && SW3;
+
+
+    blk_mem_gen_0 mem_gen_static (
+                .clka(OV7670_PCLK),
+                .wea(capture_static),
+                .addra(capture_addr),
+                .dina(capture_data_grayscale),
+                .clkb(clk_50),
+                .addrb(frame_addr),
+                .doutb(frame_pixel_static)
+                );
+                
 
     ov7670_capture capture (
                 .pclk(OV7670_PCLK),
