@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="impl_1" LaunchPart="xc7z020clg484-1" LaunchTime="1475433319">
+<GenRun Id="impl_1" LaunchPart="xc7z020clg484-1" LaunchTime="1475954953">
   <File Type="WBT-USG" Name="usage_statistics_webtalk.html"/>
   <File Type="RDI-RDI" Name="ov7670_top.vdi"/>
   <File Type="BG-DRC" Name="ov7670_top.drc"/>
@@ -50,49 +50,49 @@
   <File Type="RUN-CONSTRS" Name="$PDATADIR/runs/impl_1/constrs_in.xml"/>
   <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1">
     <Filter Type="Srcs"/>
-    <File Path="$PPRDIR/../../../../Downloads/ov7670_registers.vhd">
+    <File Path="$PPRDIR/../../../../../rmaratos/Downloads/ov7670_registers.vhd">
       <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
-    <File Path="$PPRDIR/../../../../Downloads/i2c_sender.vhd">
+    <File Path="$PPRDIR/../../../../../rmaratos/Downloads/i2c_sender.vhd">
       <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
-    <File Path="$PPRDIR/../../../../Downloads/clocking.vhd">
+    <File Path="$PPRDIR/../../../../../rmaratos/Downloads/clocking.vhd">
       <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
-    <File Path="$PPRDIR/../../../../Downloads/ov7670_controller.vhd">
+    <File Path="$PPRDIR/../../../../../rmaratos/Downloads/ov7670_controller.vhd">
       <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
-    <File Path="$PPRDIR/../../../../Downloads/vga.vhd">
+    <File Path="$PPRDIR/../../../../../rmaratos/Downloads/vga.vhd">
       <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
-    <File Path="$PPRDIR/../../../../Downloads/ov7670_capture.vhd">
+    <File Path="$PPRDIR/../../../../../rmaratos/Downloads/ov7670_capture.vhd">
       <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
-    <File Path="$PPRDIR/../../../../Downloads/debounce.vhd">
+    <File Path="$PPRDIR/../../../../../rmaratos/Downloads/debounce.vhd">
       <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
-    <File Path="$PPRDIR/../../../../Downloads/ov7670_top.vhd">
+    <File Path="$PPRDIR/../../../../../rmaratos/Downloads/ov7670_top.vhd">
       <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
@@ -117,9 +117,7 @@
     </Config>
   </FileSet>
   <Strategy Version="1" Minor="2">
-    <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2015">
-      <Desc>Vivado Implementation Defaults</Desc>
-    </StratHandle>
+    <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2015"/>
     <Step Id="init_design"/>
     <Step Id="opt_design"/>
     <Step Id="power_opt_design"/>

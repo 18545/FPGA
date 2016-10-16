@@ -45,13 +45,90 @@ proc step_failed { step } {
 set_msg_config -id {HDL 9-1061} -limit 100000
 set_msg_config -id {HDL 9-1654} -limit 100000
 
+start_step init_design
+set rc [catch {
+  create_msg_db init_design.pb
+  set_param xicom.use_bs_reader 1
+  debug::add_scope template.lib 1
+  create_project -in_memory -part xc7z020clg484-1
+  set_property board_part em.avnet.com:zed:part0:1.3 [current_project]
+  set_property design_mode GateLvl [current_fileset]
+  set_property webtalk.parent_dir /afs/ece.cmu.edu/usr/jacobwei/Public/FPGA/old/camera_demo/camera_demo.cache/wt [current_project]
+  set_property parent.project_path /afs/ece.cmu.edu/usr/jacobwei/Public/FPGA/old/camera_demo/camera_demo.xpr [current_project]
+  set_property ip_repo_paths /afs/ece.cmu.edu/usr/jacobwei/Public/FPGA/old/camera_demo/camera_demo.cache/ip [current_project]
+  set_property ip_output_repo /afs/ece.cmu.edu/usr/jacobwei/Public/FPGA/old/camera_demo/camera_demo.cache/ip [current_project]
+  add_files -quiet /afs/ece.cmu.edu/usr/jacobwei/Public/FPGA/old/camera_demo/camera_demo.runs/synth_1/ov7670_top.dcp
+  add_files -quiet /afs/ece.cmu.edu/usr/jacobwei/Public/FPGA/old/camera_demo/camera_demo.runs/blk_mem_gen_0_synth_1/blk_mem_gen_0.dcp
+  set_property netlist_only true [get_files /afs/ece.cmu.edu/usr/jacobwei/Public/FPGA/old/camera_demo/camera_demo.runs/blk_mem_gen_0_synth_1/blk_mem_gen_0.dcp]
+  read_xdc -mode out_of_context -ref blk_mem_gen_0 -cells U0 /afs/ece.cmu.edu/usr/jacobwei/Public/FPGA/old/camera_demo/camera_demo.srcs/sources_1/ip/blk_mem_gen_0/blk_mem_gen_0_ooc.xdc
+  set_property processing_order EARLY [get_files /afs/ece.cmu.edu/usr/jacobwei/Public/FPGA/old/camera_demo/camera_demo.srcs/sources_1/ip/blk_mem_gen_0/blk_mem_gen_0_ooc.xdc]
+  read_xdc /afs/ece.cmu.edu/usr/jacobwei/Downloads/zed_board.xdc
+  link_design -top ov7670_top -part xc7z020clg484-1
+  close_msg_db -file init_design.pb
+} RESULT]
+if {$rc} {
+  step_failed init_design
+  return -code error $RESULT
+} else {
+  end_step init_design
+}
+
+start_step opt_design
+set rc [catch {
+  create_msg_db opt_design.pb
+  catch {write_debug_probes -quiet -force debug_nets}
+  opt_design 
+  write_checkpoint -force ov7670_top_opt.dcp
+  catch {report_drc -file ov7670_top_drc_opted.rpt}
+  close_msg_db -file opt_design.pb
+} RESULT]
+if {$rc} {
+  step_failed opt_design
+  return -code error $RESULT
+} else {
+  end_step opt_design
+}
+
+start_step place_design
+set rc [catch {
+  create_msg_db place_design.pb
+  catch {write_hwdef -file ov7670_top.hwdef}
+  place_design 
+  write_checkpoint -force ov7670_top_placed.dcp
+  catch { report_io -file ov7670_top_io_placed.rpt }
+  catch { report_utilization -file ov7670_top_utilization_placed.rpt -pb ov7670_top_utilization_placed.pb }
+  catch { report_control_sets -verbose -file ov7670_top_control_sets_placed.rpt }
+  close_msg_db -file place_design.pb
+} RESULT]
+if {$rc} {
+  step_failed place_design
+  return -code error $RESULT
+} else {
+  end_step place_design
+}
+
+start_step route_design
+set rc [catch {
+  create_msg_db route_design.pb
+  route_design 
+  write_checkpoint -force ov7670_top_routed.dcp
+  catch { report_drc -file ov7670_top_drc_routed.rpt -pb ov7670_top_drc_routed.pb }
+  catch { report_timing_summary -warn_on_violation -max_paths 10 -file ov7670_top_timing_summary_routed.rpt -rpx ov7670_top_timing_summary_routed.rpx }
+  catch { report_power -file ov7670_top_power_routed.rpt -pb ov7670_top_power_summary_routed.pb }
+  catch { report_route_status -file ov7670_top_route_status.rpt -pb ov7670_top_route_status.pb }
+  catch { report_clock_utilization -file ov7670_top_clock_utilization_routed.rpt }
+  close_msg_db -file route_design.pb
+} RESULT]
+if {$rc} {
+  step_failed route_design
+  return -code error $RESULT
+} else {
+  end_step route_design
+}
+
 start_step write_bitstream
 set rc [catch {
   create_msg_db write_bitstream.pb
-  set_param xicom.use_bs_reader 1
-  debug::add_scope template.lib 1
-  open_checkpoint ov7670_top_routed.dcp
-  set_property webtalk.parent_dir /afs/ece.cmu.edu/usr/rmaratos/private/f16/545/camera_demo/camera_demo.cache/wt [current_project]
   write_bitstream -force ov7670_top.bit 
   catch { write_sysdef -hwdef ov7670_top.hwdef -bitfile ov7670_top.bit -meminfo ov7670_top.mmi -ltxfile debug_nets.ltx -file ov7670_top.sysdef }
   close_msg_db -file write_bitstream.pb

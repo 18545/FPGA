@@ -10,13 +10,13 @@ create_project -in_memory -part xc7z020clg484-1
 
 set_param project.compositeFile.enableAutoGeneration 0
 set_param synth.vivado.isSynthRun true
-set_property webtalk.parent_dir /afs/ece.cmu.edu/usr/rmaratos/private/f16/545/camera_demo/camera_demo.cache/wt [current_project]
-set_property parent.project_path /afs/ece.cmu.edu/usr/rmaratos/private/f16/545/camera_demo/camera_demo.xpr [current_project]
+set_property webtalk.parent_dir /afs/ece.cmu.edu/usr/jacobwei/Public/FPGA/old/camera_demo/camera_demo.cache/wt [current_project]
+set_property parent.project_path /afs/ece.cmu.edu/usr/jacobwei/Public/FPGA/old/camera_demo/camera_demo.xpr [current_project]
 set_property default_lib xil_defaultlib [current_project]
 set_property target_language Verilog [current_project]
 set_property board_part em.avnet.com:zed:part0:1.3 [current_project]
-add_files -quiet /afs/ece.cmu.edu/usr/rmaratos/private/f16/545/camera_demo/camera_demo.runs/blk_mem_gen_0_synth_1/blk_mem_gen_0.dcp
-set_property used_in_implementation false [get_files /afs/ece.cmu.edu/usr/rmaratos/private/f16/545/camera_demo/camera_demo.runs/blk_mem_gen_0_synth_1/blk_mem_gen_0.dcp]
+add_files -quiet /afs/ece.cmu.edu/usr/jacobwei/Public/FPGA/old/camera_demo/camera_demo.runs/blk_mem_gen_0_synth_1/blk_mem_gen_0.dcp
+set_property used_in_implementation false [get_files /afs/ece.cmu.edu/usr/jacobwei/Public/FPGA/old/camera_demo/camera_demo.runs/blk_mem_gen_0_synth_1/blk_mem_gen_0.dcp]
 read_vhdl -library xil_defaultlib {
   /afs/ece.cmu.edu/usr/rmaratos/Downloads/ov7670_registers.vhd
   /afs/ece.cmu.edu/usr/rmaratos/Downloads/i2c_sender.vhd
@@ -27,8 +27,8 @@ read_vhdl -library xil_defaultlib {
   /afs/ece.cmu.edu/usr/rmaratos/Downloads/debounce.vhd
   /afs/ece.cmu.edu/usr/rmaratos/Downloads/ov7670_top.vhd
 }
-read_xdc /afs/ece.cmu.edu/usr/rmaratos/Downloads/zed_board.xdc
-set_property used_in_implementation false [get_files /afs/ece.cmu.edu/usr/rmaratos/Downloads/zed_board.xdc]
+read_xdc /afs/ece.cmu.edu/usr/jacobwei/Downloads/zed_board.xdc
+set_property used_in_implementation false [get_files /afs/ece.cmu.edu/usr/jacobwei/Downloads/zed_board.xdc]
 
 synth_design -top ov7670_top -part xc7z020clg484-1
 write_checkpoint -noxdef ov7670_top.dcp
