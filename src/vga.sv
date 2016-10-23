@@ -7,33 +7,12 @@
  *  Anita Zhang 2 (anitazha)
  */
 
-/****** File-wide Colors ***********/
-typedef enum logic [23:0] {
-    RED      = {8'hFF, 8'h00, 8'h00},
-    GREEN    = {8'h00, 8'hFF, 8'h00},
-    BLUE     = {8'h00, 8'h00, 8'hFF},
-    CYAN     = {8'h00, 8'hFF, 8'hCC},
-    PURPLE   = {8'h99, 8'h00, 8'hFF},
-    YELLOW   = {8'hFF, 8'hFF, 8'h00},
-    BLACK    = {8'h00, 8'h00, 8'h00},
-    WHITE    = {8'hFF, 8'hFF, 8'hFF}
-} color_t;
-
-/****** File-wide Shapes ***********/
-typedef enum logic [2:0] {
-    LEFTTOP  = 3'b001,  // blue
-    WALL     = 3'b010,  // red
-    RIGHTTOP = 3'b011,  // cyan
-    EQUAL    = 3'b100,  // purple
-    RIGHTBOT = 3'b101,  // green
-    LEFTBOT  = 3'b110   // yellow
-} shape_t;
 
 /** BRIEF
  *  Main module that handles user input and displays game data.
  */
 
-module mastermindVGA (
+module top (
     input  logic        GCLK,
     input  logic        BTNC, BTND, BTNU, BTNL, BTNR,
     input logic SW0,SW1,SW2,SW3,SW4,SW5,SW6,SW7,
@@ -58,12 +37,20 @@ module mastermindVGA (
      *       Internal Signals
      ****************************************/
 
-    // other
-    (* mark_debug = "true" *) logic                 clk;
-    logic clk_50, clk_25,blank, clk_100;
+    logic clk, clk_50, clk_25,blank, clk_100;
     logic [9:0] x, y;
-    logic [3:0] group1,group2;
     logic [3:0] red,green,blue;
+    logic capture_we, capture_static, sobel_we;
+    logic [18:0] capture_addr, frame_addr, sobel_addr_in;
+    logic [11:0] capture_data;
+    logic [3:0] frame_pixel_live, frame_pixel_static, frame_pixel_display, frame_pixel_sobel;
+    logic [3:0] capture_data_grayscale, capture_data_template, sobel_data_in;
+    logic [9:0] capture_x, capture_y;
+    logic isNum1, isNum2, isNum3, isNum4, isNum5;
+    logic drawBox;
+    logic [3:0] buttonDown;
+    logic in_box, capture_in_box;
+
     // renamed signals
     assign clk = clk_50;
 
@@ -83,7 +70,7 @@ module mastermindVGA (
      *       VGA data
      ****************************************/
 
-    vga2 vgaCounter (
+    vga vgaCounter (
             .row        (y),
             .col        (x),
             .HS         (VGA_HS),
@@ -93,34 +80,12 @@ module mastermindVGA (
             .reset      (reset));
     
     assign clk_100 = GCLK;
-    // clking clockgen (
-    //         .CLK_100(clk_100),
-    //         .CLK_50(clk_50),
-    //         .CLK_25(clk_25)
-    //         );
-
-    // vga vgaVHD (
-    //         .clk25(clk_25),
-    //         .vga_red(red),
-    //         .vga_green(green),
-    //         .vga_blue(blue),
-    //         .vga_hsync(VGA_HS),
-    //         .vga_vsync(VGA_VS),
-    //         .frame_addr(frame_addr),
-    //         .frame_pixel(frame_pixel)
-    //         );
-    //logic [3:0] grayscale;
-    //assign grayscale = (blue + green + red)/3;
     
     //grayscaled
     assign {VGA_B4, VGA_B3, VGA_B2, VGA_B1} = blue;
     assign {VGA_G4, VGA_G3, VGA_G2, VGA_G1} = green;
     assign {VGA_R4, VGA_R3, VGA_R2, VGA_R1} = red;
 
-    logic isNum1, isNum2, isNum3, isNum4, isNum5;
-
-    logic drawBox;
-    logic [3:0] buttonDown;
 
     always_comb begin
         if(blank) begin
@@ -132,11 +97,12 @@ module mastermindVGA (
             green =  4'hf;
             red =  4'hf;
         end else begin
-            blue = frame_pixel_display[11:8];
-            green = frame_pixel_display[7:4];
-            red = frame_pixel_display[3:0];
+            blue = frame_pixel_display;
+            green = frame_pixel_display;
+            red = frame_pixel_display;
         end
     end
+    
 
     box faceBox (
       .move_up (BTNU),
@@ -148,58 +114,16 @@ module mastermindVGA (
       .rst_n (SW6),
       .x (x),
       .y (y),
+      .capture_x (capture_x),
+      .capture_y (capture_y),
       .draw_box (drawBox),
-      .button_down (buttonDown)
+      .button_down (buttonDown),
+      .in_box (in_box),
+      .capture_in_box (capture_in_box)
     );
 
     assign {LD0,LD1,LD2,LD3} = buttonDown;
 
-    drawNumber numDrawer1 (
-                    .inNum  (isNum1),
-                    .x      (x),
-                    .y      (y),
-                    .posX   (100),
-                    .posY   (100),
-                    .value  (1)
-                    );
-
-    drawNumber numDrawer2 (
-                    .inNum  (isNum2),
-                    .x      (x),
-                    .y      (y),
-                    .posX   (150),
-                    .posY   (100),
-                    .value  (8)
-                    );
-
-    drawNumber numDrawer3 (
-                    .inNum  (isNum3),
-                    .x      (x),
-                    .y      (y),
-                    .posX   (200),
-                    .posY   (100),
-                    .value  (5)
-                    );
-
-    drawNumber numDrawer4 (
-                    .inNum  (isNum4),
-                    .x      (x),
-                    .y      (y),
-                    .posX   (250),
-                    .posY   (100),
-                    .value  (4)
-                    );
-
-    drawNumber numDrawer5 (
-                .inNum  (isNum5),
-                .x      (x),
-                .y      (y),
-                .posX   (300),
-                .posY   (100),
-                .value  (5)
-                );
-
-    
     /*Instantiating VHDL camera modules*/
     logic resend, config_finished;
     assign LD7 = config_finished;
@@ -220,14 +144,16 @@ module mastermindVGA (
                 .xclk(OV7670_XCLK)
                 );
 
-    logic capture_we, capture_static;
-    logic [18:0] capture_addr, frame_addr;
-    logic [11:0] capture_data, frame_pixel_live, frame_pixel_static, frame_pixel_display;
-    logic [3:0] capture_data_grayscale;
-    
+
     assign capture_data_grayscale = (capture_data[11:8] + capture_data[7:4] + capture_data[3:0])/3;
     
+    assign capture_data_template = (capture_in_box) ? capture_data_grayscale : 0;
+
     assign frame_addr = y*640 + x;
+
+    assign capture_y = capture_addr/640;
+
+    assign capture_x = capture_addr%640;
 
     assign frame_pixel_display = (SW2) ? frame_pixel_static : frame_pixel_live;
 
@@ -249,10 +175,20 @@ module mastermindVGA (
                 .clka(OV7670_PCLK),
                 .wea(capture_static),
                 .addra(capture_addr),
-                .dina(capture_data_grayscale),
+                .dina(capture_data_template),
                 .clkb(clk_50),
                 .addrb(frame_addr),
                 .doutb(frame_pixel_static)
+                );
+
+    blk_mem_gen_0 mem_gen_sobel (
+                .clka(OV7670_PCLK),
+                .wea(sobel_we),
+                .addra(sobel_addr_in),
+                .dina(sobel_data_in),
+                .clkb(clk_50),
+                .addrb(frame_addr),
+                .doutb(frame_pixel_sobel)
                 );
                 
 
@@ -266,7 +202,7 @@ module mastermindVGA (
                 .we(capture_we)
                 );
 
-endmodule: mastermindVGA
+endmodule: top
 
 
 /*****************************************************************
@@ -281,7 +217,7 @@ endmodule: mastermindVGA
  *
  *  Requires the Library.sv modules to work. Supports 640 x 480 px.
  */
-module vga2 (
+module vga (
     output logic [9:0] row, col,
     output logic       HS, VS, blank,
     input  logic       clk_50, reset
@@ -334,39 +270,13 @@ module vga2 (
     assign h_blank    = col_count > 11'd1279;
 
     assign blank      = h_blank | v_blank;
-endmodule: vga2
+endmodule: vga
 
 /*****************************************************************
  *
  *                    Library modules
  *
  *****************************************************************/
-
-/** BRIEF
- *  Outputs whether a value lies between [low, high].
- */
-module range_check
-    #(parameter WIDTH = 4'd10) (
-    input  logic [WIDTH-1:0] val, low, high,
-    output logic             is_between
-    );
-
-    assign is_between = (val >= low) & (val <= high);
-
-endmodule: range_check
-
-/** BRIEF
- *  Outputs whether a value lies between [low, low + delta].
- */
-module offset_check
-    #(parameter WIDTH = 4'd10) (
-    input  logic [WIDTH-1:0] val, low, delta,
-    output logic             is_between
-    );
-
-    assign is_between = ((val >= low) & (val < (low+delta)));
-
-endmodule: offset_check
 
 /** BRIEF
  *  Simple up counter with synchronous clear and enable.
@@ -387,164 +297,3 @@ module simple_counter
             Q <= (Q + 1'b1);
 
 endmodule: simple_counter
-
-module drawNumber
-    #(parameter LINEWIDTH = 10'd4, PADDING = 10'd10, SIDE = 10'd42) (
-    output logic        inNum,
-    input  logic [9:0]  x, y,
-    input  logic [9:0]  posX, posY,
-    input  logic [3:0]  value
-    );
-
-    // internal signals
-    logic   [6:0] isSegX, isSegY, isSeg;
-
-    /****************************************
-     *          Output logic
-     ****************************************/
-
-    assign isSeg = (isSegX & isSegY);
-
-    always_comb begin
-        inNum = 1'b0;
-
-        case (value)
-            4'd0: begin
-                if (isSeg[5:0] | isSeg[6])
-                    inNum = 1'b1;
-            end
-            4'd1: begin
-                if (isSeg[2:1])
-                    inNum = 1'b1;
-            end
-            4'd2: begin
-                if (isSeg[0] | isSeg[1] | isSeg[6] | isSeg[4] | isSeg[3])
-                    inNum = 1'b1;
-            end
-            4'd3: begin
-                if (isSeg[3:0] || isSeg[6])
-                    inNum = 1'b1;
-            end
-            4'd4: begin
-                if (isSeg[6:5] || isSeg[2:1])
-                    inNum = 1'b1;
-            end
-            4'd5: begin
-                if (isSeg[6:5] || isSeg[3:2] || isSeg[0])
-                    inNum = 1'b1;
-            end
-            4'd6: begin
-                if (isSeg[6:2] || isSeg[0])
-                    inNum = 1'b1;
-            end
-            4'd7: begin
-                if (isSeg[2:0])
-                    inNum = 1'b1;
-            end
-            4'd8: begin
-                if (isSeg[6:0])
-                    inNum = 1'b1;
-            end
-            4'd9: begin
-                if (isSeg[3:0] || isSeg[6:5])
-                    inNum = 1'b1;
-            end                        
-        endcase
-    end
-
-    /****************************************
-     *          Segment Boundary Check
-     ****************************************/
-
-    // top segment
-    offset_check #(10) segCheckX0 (
-            .val        (x),
-            .low        (posX + PADDING),
-            .delta      (SIDE - (2*PADDING)),
-            .is_between (isSegX[0]));
-
-    offset_check #(10) segCheckY0 (
-            .val        (y),
-            .low        (posY + PADDING),
-            .delta      (LINEWIDTH),
-            .is_between (isSegY[0]));
-
-    // top right segment
-    offset_check #(10) segCheckX1 (
-            .val        (x),
-            .low        (posX + (SIDE - PADDING) - LINEWIDTH),
-            .delta      (LINEWIDTH),
-            .is_between (isSegX[1]));
-
-    offset_check #(10) segCheckY1 (
-            .val        (y),
-            .low        (posY + PADDING),
-            .delta      ((SIDE - (PADDING*2))/2),
-            .is_between (isSegY[1]));
-
-    // bottom right segment
-    offset_check #(10) segCheckX2 (
-            .val        (x),
-            .low        (posX + (SIDE - PADDING) - LINEWIDTH),
-            .delta      (LINEWIDTH),
-            .is_between (isSegX[2]));
-
-    offset_check #(10) segCheckY2 (
-            .val        (y),
-            .low        (posY + PADDING + ((SIDE - (2*PADDING))/2)),
-            .delta      ((SIDE - (PADDING*2))/2),
-            .is_between (isSegY[2]));
-
-    // bottom segment
-    offset_check #(10) segCheckX3 (
-            .val        (x),
-            .low        (posX + PADDING),
-            .delta      (SIDE - (2*PADDING)),
-            .is_between (isSegX[3]));
-
-    offset_check #(10) segCheckY3 (
-            .val        (y),
-            .low        (posY + (SIDE - PADDING) - LINEWIDTH),
-            .delta      (LINEWIDTH),
-            .is_between (isSegY[3]));
-
-    // bottom left segment
-    offset_check #(10) segCheckX4 (
-            .val        (x),
-            .low        (posX + PADDING),
-            .delta      (LINEWIDTH),
-            .is_between (isSegX[4]));
-
-    offset_check #(10) segCheckY4 (
-            .val        (y),
-            .low        (posY + PADDING + ((SIDE - (2*PADDING))/2)),
-            .delta      ((SIDE - (PADDING*2))/2),
-            .is_between (isSegY[4]));
-
-    // top left segment
-    offset_check #(10) segCheckX5 (
-            .val        (x),
-            .low        (posX + PADDING),
-            .delta      (LINEWIDTH),
-            .is_between (isSegX[5]));
-
-    offset_check #(10) segCheckY5 (
-            .val        (y),
-            .low        (posY + PADDING),
-            .delta      ((SIDE - (PADDING*2))/2),
-            .is_between (isSegY[5]));
-
-    // middle segment
-    offset_check #(10) segCheckX6 (
-            .val        (x),
-            .low        (posX + PADDING),
-            .delta      (SIDE - (2*PADDING)),
-            .is_between (isSegX[6]));
-
-    offset_check #(10) segCheckY6 (
-            .val        (y),
-            .low        (posY + (SIDE/2) - LINEWIDTH/2),
-            .delta      (LINEWIDTH),
-            .is_between (isSegY[6]));
-
-endmodule: drawNumber
