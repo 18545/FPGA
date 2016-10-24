@@ -155,7 +155,7 @@ module top (
 
     assign capture_x = capture_addr%640;
 
-    assign frame_pixel_display = (SW2) ? frame_pixel_static : frame_pixel_live;
+    assign frame_pixel_display = (SW2) ? frame_pixel_sobel : frame_pixel_live;
 
 
     blk_mem_gen_0 mem_gen (
@@ -182,7 +182,7 @@ module top (
                 );
 
     blk_mem_gen_0 mem_gen_sobel (
-                .clka(OV7670_PCLK),
+                .clka(clk_50),
                 .wea(sobel_we),
                 .addra(sobel_addr_in),
                 .dina(sobel_data_in),
@@ -190,7 +190,16 @@ module top (
                 .addrb(frame_addr),
                 .doutb(frame_pixel_sobel)
                 );
-                
+    
+    sobel sobel_conv(
+                .clk(clk_50),
+                .rst_n(rst_n),
+                .frame_pixel(capture_data_grayscale),
+                .capture_address(capture_addr),
+                .write_enable(sobel_we),
+                .filter_pixel(sobel_data_in),
+                .write_address(sobel_addr_in));            
+
 
     ov7670_capture capture (
                 .pclk(OV7670_PCLK),
