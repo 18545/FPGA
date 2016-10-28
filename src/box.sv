@@ -78,7 +78,7 @@ module up_down_counter
     output logic button_down
     );
     
-    logic [10:0] button_counter;
+    logic [34:0] button_counter;
 
     always_ff @(posedge clk) begin
             if (~rst_n) begin

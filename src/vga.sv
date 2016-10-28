@@ -30,7 +30,7 @@ module top (
     output logic VGA_B1, VGA_B2, VGA_B3, VGA_B4,
     output logic VGA_G1, VGA_G2, VGA_G3, VGA_G4,
     output logic VGA_R1, VGA_R2, VGA_R3, VGA_R4,
-    output logic LD0,LD1,LD2,LD3, LD7
+    output logic LD0,LD1,LD2,LD3,LD4,LD5,LD6,LD7
     );
 
     /****************************************
@@ -40,8 +40,8 @@ module top (
     logic clk, clk_50, clk_25,blank, clk_100;
     logic [9:0] x, y;
     logic [3:0] red,green,blue;
-    logic capture_we, capture_static, sobel_we;
-    logic [18:0] capture_addr, frame_addr, sobel_addr_in;
+    logic capture_we, capture_static, sobel_we,capture_static_we;
+    logic [18:0] capture_addr, frame_addr, sobel_addr_in,static_read_address;
     logic [11:0] capture_data;
     logic [3:0] frame_pixel_live, frame_pixel_static, frame_pixel_display, frame_pixel_sobel;
     logic [3:0] capture_data_grayscale, capture_data_template, sobel_data_in;
@@ -54,14 +54,15 @@ module top (
     // renamed signals
     assign clk = clk_50;
 
-    assign reset = BTNC;
+    assign rst_n = SW7;
+    assign reset = ~rst_n;
 
-    always_ff @(posedge GCLK, posedge reset) begin
+    always_ff @(posedge GCLK) begin
         if (reset) clk_50 <= 0;
         else clk_50 <= ~clk_50;
     end
 
-    always_ff @(posedge clk_50, posedge reset) begin
+    always_ff @(posedge clk_50) begin
         if (reset) clk_25 <= 0;
         else clk_25 <= ~clk_25;
     end
@@ -109,9 +110,9 @@ module top (
       .move_down (BTND),
       .move_left (BTNL),
       .move_right (BTNR),
-      .mode (SW7),
+      .mode (SW0),
       .clk (clk_50),
-      .rst_n (SW6),
+      .rst_n (rst_n),
       .x (x),
       .y (y),
       .capture_x (capture_x),
@@ -122,14 +123,13 @@ module top (
       .capture_in_box (capture_in_box)
     );
 
-    assign {LD0,LD1,LD2,LD3} = buttonDown;
 
     /*Instantiating VHDL camera modules*/
     logic resend, config_finished;
     assign LD7 = config_finished;
     debounce db (
                 .clk(clk_50),
-                .i(SW0),
+                .i(0),
                 .o(resend)
                 );
 
@@ -155,7 +155,7 @@ module top (
 
     assign capture_x = capture_addr%640;
 
-    assign frame_pixel_display = (SW2) ? frame_pixel_sobel : frame_pixel_live;
+    assign frame_pixel_display = (SW2) ? frame_pixel_sobel : frame_pixel_static;
 
 
     blk_mem_gen_0 mem_gen (
@@ -168,7 +168,17 @@ module top (
                 .doutb(frame_pixel_live)
                 );
 
-    assign capture_static = capture_we && SW3;
+    assign capture_static = capture_we && capture_static_we;
+
+
+    assign LD3 = ~capture_static_we;
+    assign LD4 = ~sobel_we;
+
+    trigger_write_en static_bram_we(.clk(clk),
+                                    .rst_n(rst_n),
+                                    .capture_switch(SW3),
+                                    .capture_addr(capture_addr),
+                                    .capture_static_we(capture_static_we));
 
 
     blk_mem_gen_0 mem_gen_static (
@@ -177,7 +187,7 @@ module top (
                 .addra(capture_addr),
                 .dina(capture_data_template),
                 .clkb(clk_50),
-                .addrb(frame_addr),
+                .addrb(static_read_address),
                 .doutb(frame_pixel_static)
                 );
 
@@ -194,11 +204,14 @@ module top (
     sobel sobel_conv(
                 .clk(clk_50),
                 .rst_n(rst_n),
-                .frame_pixel(capture_data_grayscale),
-                .capture_address(capture_addr),
+                .frame_pixel(frame_pixel_static),
+                .static_bram_rdy(~capture_static_we),
                 .write_enable(sobel_we),
                 .filter_pixel(sobel_data_in),
-                .write_address(sobel_addr_in));            
+                .write_address(sobel_addr_in),
+                .static_read_address(static_read_address)
+                );
+
 
 
     ov7670_capture capture (
@@ -212,6 +225,31 @@ module top (
                 );
 
 endmodule: top
+
+
+module trigger_write_en(
+    input logic clk,rst_n,capture_switch,
+    input logic [18:0] capture_addr,
+    output logic capture_static_we);
+
+
+    always_ff @(posedge clk) begin
+        if(~rst_n)
+            capture_static_we <= 1;
+        else if((capture_addr == 640*480-1)&&capture_switch) begin
+            capture_static_we <= 0;
+        end else if(~capture_switch) begin
+            capture_static_we <= 1;
+        end
+    end
+
+
+
+
+endmodule: trigger_write_en
+
+
+
 
 
 /*****************************************************************

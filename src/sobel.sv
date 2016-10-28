@@ -1,10 +1,10 @@
 module sobel (
 	input logic clk, rst_n,
 	input logic [3:0] frame_pixel,
-	input logic [18:0] capture_address,
+	input logic static_bram_rdy,
 	output logic write_enable,
 	output logic [3:0] filter_pixel,
-	output logic [18:0] write_address
+	output logic [18:0] write_address,static_read_address
 	);
 	
 	logic [2:0][2:0][3:0] buffer_out;
@@ -15,32 +15,48 @@ module sobel (
 		.in(frame_pixel),
 		.out(buffer_out)
 		);
-	/*
+	
 	always_comb begin
 		filter_pixel =  -1*buffer_out[0][0]+1*buffer_out[0][2]+
 						-2*buffer_out[1][0]+2*buffer_out[1][2]+
 						-1*buffer_out[2][0]+1*buffer_out[2][2];
-	end*/
-	assign filter_pixel = buffer_out[1][1];
+	end
+	//assign filter_pixel = buffer_out[1][1];
 
+
+	logic reg_rdy,static_bram_rdy_posedge_pulse;
+
+	//Pulse Generate
+	always_ff @(posedge clk) begin
+		if(~rst_n) begin
+			reg_rdy <= 0;
+		end else begin
+			reg_rdy <= static_bram_rdy;
+		end
+	end
+
+
+
+	assign static_bram_rdy_posedge_pulse =  static_bram_rdy && ~reg_rdy;
 
 
 	always_ff @(posedge clk) begin
 		if (~rst_n) begin
-			write_address <= capture_address;
+			write_address <= 0;
 			write_enable <= 1;
 		end else begin
-			write_enable <= 1;
-			if(write_address == (640*480)-1) begin
+			if(static_bram_rdy_posedge_pulse) begin
 				write_address <= 0;
-			end else begin
+				write_enable <= 1;
+			end else if(write_address == (640*480)-1) begin
+				write_enable <= 0;
+			end else if(write_enable) begin
 				write_address <= write_address + 1;
 			end
-
 		end
-
 	end
 
+	assign static_read_address = write_address;
 
 
 endmodule: sobel
