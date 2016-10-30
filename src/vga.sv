@@ -176,7 +176,7 @@ module top (
 
     trigger_write_en static_bram_we(.clk(clk),
                                     .rst_n(rst_n),
-                                    .capture_switch(SW3),
+                                    .sobel_we(sobel_we),
                                     .capture_addr(capture_addr),
                                     .capture_static_we(capture_static_we));
 
@@ -227,8 +227,29 @@ module top (
 endmodule: top
 
 
+// module trigger_write_en(
+//     input logic clk,rst_n,capture_switch,
+//     input logic [18:0] capture_addr,
+//     output logic capture_static_we);
+
+
+//     always_ff @(posedge clk) begin
+//         if(~rst_n)
+//             capture_static_we <= 1;
+//         else if((capture_addr == 640*480-1)&&capture_switch) begin
+//             capture_static_we <= 0;
+//         end else if(~capture_switch) begin
+//             capture_static_we <= 1;
+//         end
+//     end
+
+
+
+
+// endmodule: trigger_write_en
+
 module trigger_write_en(
-    input logic clk,rst_n,capture_switch,
+    input logic clk,rst_n,sobel_we, 
     input logic [18:0] capture_addr,
     output logic capture_static_we);
 
@@ -236,10 +257,9 @@ module trigger_write_en(
     always_ff @(posedge clk) begin
         if(~rst_n)
             capture_static_we <= 1;
-        else if((capture_addr == 640*480-1)&&capture_switch) begin
-            capture_static_we <= 0;
-        end else if(~capture_switch) begin
-            capture_static_we <= 1;
+        else if((capture_addr == 640*480-1)) begin
+            if (capture_static_we) capture_static_we <= 0;
+            else capture_static_we <= 1;
         end
     end
 
@@ -247,8 +267,6 @@ module trigger_write_en(
 
 
 endmodule: trigger_write_en
-
-
 
 
 
