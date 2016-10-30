@@ -147,7 +147,9 @@ module top (
 
     assign capture_data_grayscale = (capture_data[11:8] + capture_data[7:4] + capture_data[3:0])/3;
     
-    assign capture_data_template = (capture_in_box) ? capture_data_grayscale : 0;
+    //assign capture_data_template = (capture_in_box) ? capture_data_grayscale : 0;
+
+    assign capture_data_template = capture_data_grayscale;
 
     assign frame_addr = y*640 + x;
 
@@ -249,18 +251,20 @@ endmodule: top
 // endmodule: trigger_write_en
 
 module trigger_write_en(
-    input logic clk,rst_n,sobel_we, 
+    input logic clk,rst_n,sobel_we,
     input logic [18:0] capture_addr,
     output logic capture_static_we);
 
-
+    logic [18:0] previous_addr;
     always_ff @(posedge clk) begin
-        if(~rst_n)
+        if(~rst_n) begin
             capture_static_we <= 1;
-        else if((capture_addr == 640*480-1)) begin
+            previous_addr <= 0;
+        end else if((capture_addr == 640*480-1) && (capture_addr != previous_addr)) begin
             if (capture_static_we) capture_static_we <= 0;
-            else capture_static_we <= 1;
+            else capture_static_we <= ~sobel_we;
         end
+        previous_addr <= capture_addr;
     end
 
 

@@ -8,7 +8,7 @@ module sobel (
 	);
 	
 	logic [2:0][2:0][3:0] buffer_out;
-
+	logic [3:0] filter_pixel_raw;
 	shift_register pixel_buffer (
 		.clk(clk),
 		.rst_n(rst_n),
@@ -17,10 +17,12 @@ module sobel (
 		);
 	
 	always_comb begin
-		filter_pixel =  -1*buffer_out[0][0]+1*buffer_out[0][2]+
+		filter_pixel_raw =  -1*buffer_out[0][0]+1*buffer_out[0][2]+
 						-2*buffer_out[1][0]+2*buffer_out[1][2]+
 						-1*buffer_out[2][0]+1*buffer_out[2][2];
+		filter_pixel = (filter_pixel_raw>8) ? 15 : 0;
 	end
+
 	//assign filter_pixel = buffer_out[1][1];
 
 
