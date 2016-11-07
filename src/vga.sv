@@ -6,7 +6,8 @@
  *  AUTHOR of VGA code
  *  Anita Zhang 2 (anitazha)
  */
-
+`define MAX_SIZE 40
+`define MAX_SIZE_BITS ($clog2(`MAX_SIZE)-1)
 
 /** BRIEF
  *  Main module that handles user input and displays game data.
@@ -50,6 +51,11 @@ module top (
     logic drawBox;
     logic [3:0] buttonDown;
     logic in_box, capture_in_box;
+
+
+    logic template_rdy;
+    logic [`MAX_SIZE_BITS:0][`MAX_SIZE_BITS:0][3:0] template_reg;
+    logic [5:0] template_x,template_y;
 
     // renamed signals
     assign clk = clk_50;
@@ -120,7 +126,9 @@ module top (
       .draw_box (drawBox),
       .button_down (buttonDown),
       .in_box (in_box),
-      .capture_in_box (capture_in_box)
+      .capture_in_box (capture_in_box),
+      .template_x (template_x),
+      .template_y (template_y)
     );
 
 
@@ -157,7 +165,16 @@ module top (
 
     assign capture_x = capture_addr%640;
 
-    assign frame_pixel_display = (SW2) ? frame_pixel_sobel : frame_pixel_static;
+    //assign frame_pixel_display = (SW2) ? frame_pixel_sobel : frame_pixel_static;
+
+    always_comb begin
+        if (SW2) begin
+            if (x >= 300 && x < 340 && y >= 220 && y < 260 ) 
+                frame_pixel_display = template_reg[y-220][x-300];
+            else frame_pixel_display = frame_pixel_sobel;
+        end
+        else frame_pixel_display = frame_pixel_live;
+    end
 
 
     blk_mem_gen_0 mem_gen (
@@ -175,12 +192,26 @@ module top (
 
     assign LD3 = ~capture_static_we;
     assign LD4 = ~sobel_we;
+    assign LD1 = capture_in_box && capture_we;
+
 
     trigger_write_en static_bram_we(.clk(clk),
                                     .rst_n(rst_n),
                                     .sobel_we(sobel_we),
                                     .capture_addr(capture_addr),
                                     .capture_static_we(capture_static_we));
+
+
+    template_capture record_template(
+                                    .clk(clk),
+                                    .rst_n(rst_n),
+                                    .capture_in_box(capture_in_box),
+                                    .capture_switch(SW3),
+                                    .capture_data_template(capture_data_template),
+                                    .template_x(template_x),
+                                    .template_y(template_y),
+                                    .template_rdy(template_rdy),
+                                    .template_reg(template_reg));
 
 
     blk_mem_gen_0 mem_gen_static (
@@ -271,6 +302,39 @@ module trigger_write_en(
 
 
 endmodule: trigger_write_en
+
+module template_capture(
+    input logic clk, rst_n, capture_in_box,capture_switch,
+    input logic [3:0] capture_data_template,
+    input logic [5:0] template_x,template_y,
+    output logic template_rdy,
+    output logic [`MAX_SIZE_BITS:0][`MAX_SIZE_BITS:0][3:0] template_reg);
+
+
+    logic capturing_template;
+
+
+    always_ff @(posedge clk) begin
+        if(~rst_n) begin
+            template_reg <= 0;
+            capturing_template <= 1;
+        end else if( capture_in_box) begin
+            template_reg[template_y][template_x] <= 4'hf;
+        end
+
+
+        if(capture_switch && template_y == `MAX_SIZE) begin
+            capturing_template <= 0;
+        end else if(~capture_switch) begin
+            capturing_template <= 1;
+        end
+    end
+
+
+    assign template_rdy = ~capturing_template;
+
+
+endmodule: template_capture
 
 
 

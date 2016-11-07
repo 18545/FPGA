@@ -26,8 +26,8 @@
 
 `define WIDTH 640
 `define HEIGHT 480
-`define BOX_WIDTH 160
-`define BOX_HEIGHT 120
+`define BOX_WIDTH 100
+`define BOX_HEIGHT 100
 `define START_X 320
 `define START_Y 240
 
@@ -38,14 +38,16 @@ module box(
     input logic move_up, move_down, move_left, move_right, mode,
     input  logic [9:0]  x, y, capture_x, capture_y,
     output logic draw_box, in_box, capture_in_box,
-    output logic [3:0] button_down
+    output logic [3:0] button_down,
+    output logic [5:0] template_x,template_y
     );
 
     logic [9:0] width, height, c_x, c_y;
     logic [9:0] left, right, top, bottom;
     
     assign in_box = (y >= top && y <= bottom && x >= left && x <= right);
-    assign capture_in_box = (capture_y >= top && capture_y <= bottom && capture_x >= left && capture_x <= right);
+    //assign capture_in_box = (capture_y >= top && capture_y <= bottom && capture_x >= left && capture_x <= right);
+    assign capture_in_box = (capture_y >= (c_y-20) && capture_y < (c_y+20) && capture_x >= (c_x-20) && capture_x < (c_x+20));
 
     assign top_bottom = (y >= top && y <= bottom) && (x == left || x == right);
     assign left_right = (x >= left && x <= right) && (y == top || y == bottom);
@@ -59,9 +61,15 @@ module box(
     assign x_y_mode = mode;
     assign width_height_mode = !mode;
 
-    up_down_counter #(160) width_counter(clk, rst_n,
+
+    assign template_x  = capture_x - left;
+    assign template_y = capture_y - top;
+
+
+
+    up_down_counter width_counter(clk, rst_n,
       width_height_mode, move_right, move_left, width, button_down[0]);
-    up_down_counter #(120) height_counter(clk, rst_n,
+    up_down_counter height_counter(clk, rst_n,
       width_height_mode, move_up, move_down, height, button_down[1]);
     up_down_counter #(320, 0, 640) c_x_counter(clk, rst_n,
       x_y_mode, move_right, move_left, c_x, button_down[2]);
@@ -71,7 +79,7 @@ module box(
 endmodule
 
 module up_down_counter
-    #(parameter DEFAULT=8'd100, MIN=8'd5, MAX=8'd200) (
+    #(parameter DEFAULT=8'd100, MIN=8'd5, MAX=8'd100) (
     input logic clk, rst_n, en,
     input logic count_up, count_down,
     output logic [9:0] count,
