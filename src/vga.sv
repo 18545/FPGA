@@ -6,8 +6,12 @@
  *  AUTHOR of VGA code
  *  Anita Zhang 2 (anitazha)
  */
-`define MAX_SIZE 40
-`define MAX_SIZE_BITS ($clog2(`MAX_SIZE)-1)
+`define TEMPLATE_SIZE 40
+`define WHITE 4'hf
+`define VGA_WIDTH 640
+`define VGA_HEIGHT 480
+`define TEMPLATE_DISPLAY_TOP (`VGA_HEIGHT/2 - `TEMPLATE_SIZE/2)
+`define TEMPLATE_DISPLAY_LEFT (`VGA_WIDTH/2 - `TEMPLATE_SIZE/2)
 
 /** BRIEF
  *  Main module that handles user input and displays game data.
@@ -49,12 +53,11 @@ module top (
     logic [9:0] capture_x, capture_y;
     logic isNum1, isNum2, isNum3, isNum4, isNum5;
     logic drawBox;
-    logic [3:0] buttonDown;
-    logic in_box, capture_in_box;
+    logic in_box, template_in_box;
 
 
     logic template_rdy;
-    logic [`MAX_SIZE_BITS:0][`MAX_SIZE_BITS:0][3:0] template_reg;
+    logic [`TEMPLATE_SIZE-1:0][`TEMPLATE_SIZE-1:0][3:0] template_reg;
     logic [5:0] template_x,template_y;
 
     // renamed signals
@@ -100,9 +103,9 @@ module top (
             green =  4'h0;
             red =  4'h0;
         end else if(drawBox) begin
-            blue =  4'hf;
-            green =  4'hf;
-            red =  4'hf;
+            blue =  `WHITE;
+            green =  `WHITE;
+            red =  `WHITE;
         end else begin
             blue = frame_pixel_display;
             green = frame_pixel_display;
@@ -124,78 +127,44 @@ module top (
       .capture_x (capture_x),
       .capture_y (capture_y),
       .draw_box (drawBox),
-      .button_down (buttonDown),
       .in_box (in_box),
-      .capture_in_box (capture_in_box),
-      .template_x (template_x),
-      .template_y (template_y)
+      .template_in_box (template_in_box)
+//      .template_x (template_x),
+//      .template_y (template_y)
     );
-
-
-    /*Instantiating VHDL camera modules*/
-    logic resend, config_finished;
-    assign LD7 = config_finished;
-    debounce db (
-                .clk(clk_50),
-                .i(0),
-                .o(resend)
-                );
-
-    ov7670_controller controller (
-                .clk(clk_50),
-                .resend(resend),
-                .config_finished(config_finished),
-                .siod(OV7670_SIOD),
-                .sioc(OV7670_SIOC),
-                .reset(OV7670_RESET),
-                .pwdn(OV7670_PWDN),
-                .xclk(OV7670_XCLK)
-                );
-
 
     assign capture_data_grayscale = (capture_data[11:8] + capture_data[7:4] + capture_data[3:0])/3;
     
-    //assign capture_data_template = (capture_in_box) ? capture_data_grayscale : 0;
+    //assign capture_data_template = (template_in_box) ? capture_data_grayscale : 0;
 
     assign capture_data_template = capture_data_grayscale;
 
-    assign frame_addr = y*640 + x;
+    assign frame_addr = y*`VGA_WIDTH + x;
+    
+    assign capture_x = capture_addr%`VGA_WIDTH;
+    assign capture_y = (capture_addr - capture_x)/`VGA_WIDTH;
 
-    assign capture_y = capture_addr/640;
-
-    assign capture_x = capture_addr%640;
-
-    //assign frame_pixel_display = (SW2) ? frame_pixel_sobel : frame_pixel_static;
-
-    always_comb begin
-        if (SW2) begin
-            if (x >= 300 && x < 340 && y >= 220 && y < 260 ) 
-                frame_pixel_display = template_reg[y-220][x-300];
-            else frame_pixel_display = frame_pixel_sobel;
-        end
-        else frame_pixel_display = frame_pixel_live;
-    end
-
-
-    blk_mem_gen_0 mem_gen (
-                .clka(OV7670_PCLK),
-                .wea(capture_we),
-                .addra(capture_addr),
-                .dina(capture_data_grayscale),
-                .clkb(clk_50),
-                .addrb(frame_addr),
-                .doutb(frame_pixel_live)
-                );
 
     assign capture_static = capture_we && capture_static_we;
 
 
     assign LD3 = ~capture_static_we;
     assign LD4 = ~sobel_we;
-    assign LD1 = capture_in_box && capture_we;
+    assign LD1 = template_in_box;
+
+    //assign frame_pixel_display = (SW2) ? frame_pixel_sobel : frame_pixel_static;
+
+    always_comb begin
+        if (SW2) begin
+            if (template_in_box)
+                frame_pixel_display = template_reg[y-`TEMPLATE_DISPLAY_TOP][x-`TEMPLATE_DISPLAY_LEFT];
+            else frame_pixel_display = frame_pixel_sobel;
+        end
+        else frame_pixel_display = frame_pixel_live;
+    end
 
 
-    trigger_write_en static_bram_we(.clk(clk),
+  trigger_write_en static_bram_we(.clk(clk),
                                     .rst_n(rst_n),
                                     .sobel_we(sobel_we),
                                     .capture_addr(capture_addr),
@@ -205,13 +174,34 @@ module top (
     template_capture record_template(
                                     .clk(clk),
                                     .rst_n(rst_n),
-                                    .capture_in_box(capture_in_box),
+                                    .template_in_box(template_in_box),
                                     .capture_switch(SW3),
-                                    .capture_data_template(capture_data_template),
-                                    .template_x(template_x),
-                                    .template_y(template_y),
+                                    .capture_data_template(frame_pixel_live),
                                     .template_rdy(template_rdy),
                                     .template_reg(template_reg));
+
+    
+    sobel sobel_conv(
+                .clk(clk_50),
+                .rst_n(rst_n),
+                .frame_pixel(frame_pixel_static),
+                .static_bram_rdy(~capture_static_we),
+                .write_enable(sobel_we),
+                .filter_pixel(sobel_data_in),
+                .write_address(sobel_addr_in),
+                .static_read_address(static_read_address)
+                );
+
+    // BLOCK RAMS
+    blk_mem_gen_0 mem_gen (
+                .clka(OV7670_PCLK),
+                .wea(capture_we),
+                .addra(capture_addr),
+                .dina(capture_data_grayscale),
+                .clkb(clk_50),
+                .addrb(frame_addr),
+                .doutb(frame_pixel_live)
+                );
 
 
     blk_mem_gen_0 mem_gen_static (
@@ -233,19 +223,28 @@ module top (
                 .addrb(frame_addr),
                 .doutb(frame_pixel_sobel)
                 );
-    
-    sobel sobel_conv(
+
+  
+
+    /*Instantiating VHDL camera modules*/
+    logic resend, config_finished;
+    assign LD7 = config_finished;
+    debounce db (
                 .clk(clk_50),
-                .rst_n(rst_n),
-                .frame_pixel(frame_pixel_static),
-                .static_bram_rdy(~capture_static_we),
-                .write_enable(sobel_we),
-                .filter_pixel(sobel_data_in),
-                .write_address(sobel_addr_in),
-                .static_read_address(static_read_address)
+                .i(0),
+                .o(resend)
                 );
 
-
+    ov7670_controller controller (
+                .clk(clk_50),
+                .resend(resend),
+                .config_finished(config_finished),
+                .siod(OV7670_SIOD),
+                .sioc(OV7670_SIOC),
+                .reset(OV7670_RESET),
+                .pwdn(OV7670_PWDN),
+                .xclk(OV7670_XCLK)
+                );
 
     ov7670_capture capture (
                 .pclk(OV7670_PCLK),
@@ -291,39 +290,58 @@ module trigger_write_en(
         if(~rst_n) begin
             capture_static_we <= 1;
             previous_addr <= 0;
-        end else if((capture_addr == 640*480-1) && (capture_addr != previous_addr)) begin
+        end else if((capture_addr == `VGA_WIDTH*`VGA_HEIGHT-1) && (capture_addr != previous_addr)) begin
             if (capture_static_we) capture_static_we <= 0;
             else capture_static_we <= ~sobel_we;
         end
         previous_addr <= capture_addr;
     end
 
-
-
-
 endmodule: trigger_write_en
 
 module template_capture(
-    input logic clk, rst_n, capture_in_box,capture_switch,
+    input logic clk, rst_n, template_in_box,capture_switch,
     input logic [3:0] capture_data_template,
-    input logic [5:0] template_x,template_y,
+    // input logic [5:0] template_x,template_y,
     output logic template_rdy,
-    output logic [`MAX_SIZE_BITS:0][`MAX_SIZE_BITS:0][3:0] template_reg);
+    output logic [`TEMPLATE_SIZE-1:0][`TEMPLATE_SIZE-1:0][3:0] template_reg);
 
 
     logic capturing_template;
+    logic [5:0] template_x,template_y;
+    logic everyOther;
 
 
     always_ff @(posedge clk) begin
         if(~rst_n) begin
-            template_reg <= 0;
+            //template_reg <= 0;
+            template_x <= 0;
+            everyOther <= 1;
+            template_y <= 0;
             capturing_template <= 1;
-        end else if( capture_in_box) begin
-            template_reg[template_y][template_x] <= 4'hf;
+            template_reg[`TEMPLATE_SIZE/4][`TEMPLATE_SIZE/4] <= `WHITE;
+            template_reg[`TEMPLATE_SIZE/4][3*`TEMPLATE_SIZE/4] <= `WHITE;
+            template_reg[3*`TEMPLATE_SIZE/4][3*`TEMPLATE_SIZE/4] <= `WHITE;
+            template_reg[3*`TEMPLATE_SIZE/4][`TEMPLATE_SIZE/4] <= `WHITE;
+        end else if(template_in_box && everyOther) begin
+            if ((template_x == `TEMPLATE_SIZE - 1)) begin
+                template_x <= 0;
+                if (template_y == `TEMPLATE_SIZE - 1) 
+                    template_y <= 0;
+                else 
+                    template_y <= template_y + 1;
+                
+            end
+            else begin
+                template_x <= template_x + 1;
+            end
+            template_reg[template_y][template_x] <= capture_data_template;
+            
         end
+        everyOther <= ~everyOther;
 
 
-        if(capture_switch && template_y == `MAX_SIZE) begin
+        if(capture_switch && template_y == `TEMPLATE_SIZE - 1) begin
             capturing_template <= 0;
         end else if(~capture_switch) begin
             capturing_template <= 1;
