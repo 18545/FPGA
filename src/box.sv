@@ -1,4 +1,5 @@
-`timescale 1ns / 1ps
+`include "constants.vh"
+
 //////////////////////////////////////////////////////////////////////////////////
 // Company:
 // Engineer:
@@ -19,37 +20,20 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-`define TOP 0
-`define RIGHT 1
-`define BOTTOM 2
-`define LEFT 3
-
-`define WIDTH 640
-`define HEIGHT 480
-`define BOX_WIDTH 100
-`define BOX_HEIGHT 100
-`define START_X 320
-`define START_Y 240
-
-`define TEMPLATE_SIZE 40
-
-
-
-
 module box(
     input logic clk, rst_n,
-    input logic move_up, move_down, move_left, move_right, mode,
-    input  logic [9:0]  x, y, capture_x, capture_y,
-    output logic draw_box, in_box, template_in_box
-//    output logic [5:0] template_x,template_y
+    input logic move_up, move_down, move_left, move_right, mode, max_ready, tracking_mode,
+    input  logic [9:0]  x, y, capture_x, capture_y, max_x, max_y,
+    output logic draw_box, in_box, template_in_box, template_start,
+    output logic [9:0] template_top, template_left,
+    output logic [9:0] left, right, top, bottom
     );
 
-    logic [9:0] width, height, c_x, c_y;
-    logic [9:0] left, right, top, bottom;
-    logic [9:0] template_top, template_bottom, template_left, template_right;
+    logic [9:0] width, height, c_x, c_y, counter_x, counter_y;
+    logic [9:0] template_bottom, template_right;
     
+    assign template_start = (y == template_top && x == template_left);
     assign in_box = (y >= top && y <= bottom && x >= left && x <= right);
-   // assign capture_in_box = (capture_y >= top && capture_y <= bottom && capture_x >= left && capture_x <= right);
     assign template_in_box = ((y >= template_top) && (y < template_bottom) && 
                              (x >= template_left) && (x < template_right));
 
@@ -65,29 +49,36 @@ module box(
     assign x_y_mode = mode;
     assign width_height_mode = !mode;
 
-    assign template_top = c_y - `TEMPLATE_SIZE/2;
-    assign template_bottom = c_y + `TEMPLATE_SIZE/2;
-    assign template_left = c_x - `TEMPLATE_SIZE/2;
-    assign template_right = c_x + `TEMPLATE_SIZE/2;
+    assign template_top = c_y - `TEMPLATE_WIDTH/2;
+    assign template_bottom = c_y + `TEMPLATE_WIDTH/2;
+    assign template_left = c_x - `TEMPLATE_WIDTH/2;
+    assign template_right = c_x + `TEMPLATE_WIDTH/2;
 
-    assign template_x  = x- template_left;
-    assign template_y = y - template_top;
-
-
+    always_ff @(posedge clk) begin
+        if (tracking_mode) begin
+            if (max_ready) begin
+                c_x <= max_x;
+                c_y <= max_y;
+            end
+        end else begin
+            c_x <= counter_x;
+            c_y <= counter_y;
+        end
+    end
 
     up_down_counter width_counter(clk, rst_n,
       width_height_mode, move_right, move_left, width);
     up_down_counter height_counter(clk, rst_n,
       width_height_mode, move_up, move_down, height);
-    up_down_counter #(320, 0, 640) c_x_counter(clk, rst_n,
-      x_y_mode, move_right, move_left, c_x);
-    up_down_counter #(240, 0, 480) c_y_counter(clk, rst_n,
-      x_y_mode, move_down, move_up, c_y);
+    up_down_counter #(`VGA_WIDTH/2, 0, `VGA_WIDTH) c_x_counter(clk, rst_n,
+      x_y_mode, move_right, move_left, counter_x);
+    up_down_counter #(`VGA_HEIGHT/2, 0, `VGA_HEIGHT) c_y_counter(clk, rst_n,
+      x_y_mode, move_down, move_up, counter_y);
 
 endmodule
 
 module up_down_counter
-    #(parameter DEFAULT=8'd100, MIN=8'd5, MAX=8'd100) (
+    #(parameter DEFAULT=`BOX_WIDTH, MIN=8'd5, MAX=`BOX_WIDTH) (
     input logic clk, rst_n, en,
     input logic count_up, count_down,
     output logic [9:0] count
