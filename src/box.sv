@@ -26,10 +26,10 @@ module box(
     input  logic [9:0]  x, y, capture_x, capture_y, max_x, max_y,
     output logic draw_box, in_box, template_in_box, template_start,
     output logic [9:0] template_top, template_left,
-    output logic [9:0] left, right, top, bottom
+    output logic [9:0] left, right, top, bottom, c_x, c_y
     );
 
-    logic [9:0] width, height, c_x, c_y, counter_x, counter_y;
+    logic [9:0] width, height, counter_x, counter_y;
     logic [9:0] template_bottom, template_right;
     
     assign template_start = (y == template_top && x == template_left);

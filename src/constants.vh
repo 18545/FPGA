@@ -1,10 +1,13 @@
 `define VGA_WIDTH 640
 `define VGA_HEIGHT 480
 
-`define TEMPLATE_WIDTH 3
+`define TEMPLATE_WIDTH 16
 `define BOX_WIDTH 10
-`define SEARCH_WIDTH 100
+`define SEARCH_WIDTH 50
 
 
 `define WHITE 4'hf
 
+`define TEMPLATE_SIZE 16
+
+`define MAX_THRESHOLD 50

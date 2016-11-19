@@ -36,7 +36,7 @@ module top (
     logic in_box, template_in_box, max_ready;
     logic template_rdy, template_start;
 
-    logic [9:0] x, y;
+    logic [9:0] x, y, c_x, c_y;
     logic [3:0] red,green,blue;
     logic [18:0] capture_addr, frame_addr, sobel_addr_in,static_read_address;
     logic [11:0] capture_data;
@@ -125,7 +125,9 @@ module top (
       .left(left),
       .right(right),
       .top(top),
-      .bottom(bottom)
+      .bottom(bottom),
+      .c_x(c_x),
+      .c_y(c_y)
     );
 
     assign capture_data_grayscale = (capture_data[11:8] + capture_data[7:4] + capture_data[3:0])/3;
@@ -185,7 +187,9 @@ module top (
                 .max_ready(max_ready),
                 .static_read_address(static_read_address),
                 .max_x(max_x),
-                .max_y(max_y)
+                .max_y(max_y),
+                .c_x(c_x),
+                .c_y(c_y)
                 );
 
     // BLOCK RAMS
@@ -293,7 +297,7 @@ module template_capture(
             else begin
                 template_x <= template_x + 1;
             end
-            if (template_y < `TEMPLATE_WIDTH -1)
+            if (template_y <= `TEMPLATE_WIDTH -1)
                 template_reg[template_y][template_x] <= capture_data_template;
             
         end
