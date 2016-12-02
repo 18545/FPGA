@@ -17,7 +17,7 @@ module top (
     input logic OV7670_PCLK, 
     output logic OV7670_XCLK,
     input logic [7:0] OV7670_D,
-
+    input logic J_UP, J_LEFT, J_RIGHT, J_DOWN, J_BUTTON,
     output logic        VGA_VS, VGA_HS,
     output logic VGA_B1, VGA_B2, VGA_B3, VGA_B4,
     output logic VGA_G1, VGA_G2, VGA_G3, VGA_G4,
@@ -46,6 +46,11 @@ module top (
     logic [9:0] left, right, top, bottom;
     
     logic [`TEMPLATE_WIDTH-1:0][`TEMPLATE_WIDTH-1:0][3:0] template_reg;
+
+
+
+    logic reg_button_press,capture_state;
+
 
     // renamed signals
     assign clk = clk_50;
@@ -101,10 +106,10 @@ module top (
     
 
     box faceBox (
-      .move_up (BTNU),
-      .move_down (BTND),
-      .move_left (BTNL),
-      .move_right (BTNR),
+      .move_up (~J_UP),
+      .move_down (~J_DOWN),
+      .move_left (~J_LEFT),
+      .move_right (~J_RIGHT),
       .mode (SW0),
       .clk (clk_50),
       .rst_n (rst_n),
@@ -121,7 +126,7 @@ module top (
       .max_x(max_x),
       .max_y(max_y),
       .max_ready(max_ready),
-      .tracking_mode(SW3),
+      .tracking_mode(capture_state),
       .left(left),
       .right(right),
       .top(top),
@@ -142,7 +147,7 @@ module top (
 
     assign capture_static = capture_we && capture_static_we;
 
-    assign LD1 = template_in_box;
+    assign LD1 = ~capture_state;
     assign LD3 = ~capture_static_we;
     assign LD4 = ~sobel_we;
 
@@ -156,6 +161,28 @@ module top (
     end
 
 
+
+    always_ff @(posedge clk) begin
+        if(~rst_n) begin
+            reg_button_press <= 0;
+        end else begin
+            reg_button_press <= J_BUTTON;
+        end
+    end
+
+    assign button_pulse = ~reg_button_press &&  J_BUTTON;
+
+
+    always_ff @(posedge clk) begin
+        if(~rst_n) begin
+            capture_state <= 0; 
+        end else if(button_pulse) begin
+            capture_state <= ~capture_state;
+        end
+    end
+
+
+
   trigger_write_en static_bram_we(.clk(clk),
                                     .rst_n(rst_n),
                                     .sobel_we(~max_ready),
@@ -167,7 +194,7 @@ module top (
                                     .clk(clk),
                                     .rst_n(rst_n),
                                     .template_in_box(template_in_box),
-                                    .capture_switch(SW3),
+                                    .capture_switch(capture_state),
                                     .capture_data_template(frame_pixel_live),
                                     .template_rdy(template_rdy),
                                     .template_reg(template_reg),
@@ -183,7 +210,7 @@ module top (
                 .right(right),
                 .top(top),
                 .bottom(bottom),
-                .tracking_mode(SW3),
+                .tracking_mode(capture_state),
                 .max_ready(max_ready),
                 .static_read_address(static_read_address),
                 .max_x(max_x),

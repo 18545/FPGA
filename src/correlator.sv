@@ -4,7 +4,7 @@ module correlator (
 	input logic clk, rst_n,
 	input logic [3:0] frame_pixel,
 	input logic static_bram_rdy,
-	input logic [`TEMPLATE_SIZE-1:0][`TEMPLATE_SIZE-1:0][3:0] template_reg,
+	input logic [`TEMPLATE_WIDTH-1:0][`TEMPLATE_WIDTH-1:0][3:0] template_reg,
 	input logic [9:0] left, right, top, bottom, c_x, c_y,
 	input logic tracking_mode,
 	output logic max_ready,
@@ -12,8 +12,10 @@ module correlator (
 	output logic [9:0] max_x, max_y
 	);
 	
-	logic [`TEMPLATE_SIZE - 1:0][`TEMPLATE_SIZE - 1:0][3:0] buffer_out;
-	logic [18:0] current_response, max_response, write_address;
+	//localparam RESPONSE_SIZE = $clog2(225 * `TEMPLATE_WIDTH * `TEMPLATE_WIDTH);
+	logic [`TEMPLATE_WIDTH - 1:0][`TEMPLATE_WIDTH - 1:0][3:0] buffer_out;
+	logic [18:0] current_response, max_response;
+	logic [18:0] write_address;
 	logic [9:0] read_x, read_y;
 	logic in_box;
 	shift_register pixel_buffer (
@@ -26,10 +28,13 @@ module correlator (
 	always_comb begin
 		logic [5:0] row, col;
 		current_response = 0;
-		for (row = 0; row < `TEMPLATE_SIZE; row = row + 1) begin
-			for (col = 0; col < `TEMPLATE_SIZE; col = col + 1) begin
-				current_response = current_response + ((template_reg[row][col]- buffer_out[row][col])*
-														(template_reg[row][col]- buffer_out[row][col]));
+		for (row = 0; row < `TEMPLATE_WIDTH; row = row + 1) begin
+			for (col = 0; col < `TEMPLATE_WIDTH; col = col + 1) begin
+				// current_response = current_response + ((template_reg[row][col]- buffer_out[row][col])*
+				// 										(template_reg[row][col]- buffer_out[row][col]));
+				if (template_reg[row][col] > buffer_out[row][col])
+					current_response = current_response + (template_reg[row][col]- buffer_out[row][col]);
+				else current_response = current_response + (buffer_out[row][col] - template_reg[row][col]);
 			end
 		end
 	end
@@ -52,8 +57,8 @@ module correlator (
 		end	else if ((current_response < max_response) && on_screen && 
 					 ((max_response - current_response) > `MAX_THRESHOLD)) begin
 			max_response <= current_response;
-			max_x <= read_x - `TEMPLATE_SIZE/2;
-			max_y <= read_y - `TEMPLATE_SIZE/2;
+			max_x <= read_x - `TEMPLATE_WIDTH/2;
+			max_y <= read_y - `TEMPLATE_WIDTH/2;
 		end 
 	end
 
@@ -131,9 +136,9 @@ endmodule: correlator
 module shift_register (
 	input logic clk, rst_n,
 	input logic [3:0] in,
-	output logic [`TEMPLATE_SIZE - 1:0][`TEMPLATE_SIZE - 1:0][3:0] out
+	output logic [`TEMPLATE_WIDTH - 1:0][`TEMPLATE_WIDTH - 1:0][3:0] out
 	);
-	localparam buffer_size = ((2 * `SEARCH_WIDTH) * (`TEMPLATE_SIZE - 1)) + (`TEMPLATE_SIZE - 1);
+	localparam buffer_size = ((2 * `SEARCH_WIDTH) * (`TEMPLATE_WIDTH - 1)) + (`TEMPLATE_WIDTH - 1);
 	logic [buffer_size:0][3:0] register;
 
 	always_ff @(posedge clk) begin
@@ -145,10 +150,10 @@ module shift_register (
 	logic [5:0] row;
 	logic [$clog2(buffer_size):0] row_start, row_end;
 	always_comb begin
-		for (row = 0; row <`TEMPLATE_SIZE; row = row + 1) begin
+		for (row = 0; row <`TEMPLATE_WIDTH; row = row + 1) begin
 			//row_start = buffer_size - (`VGA_WIDTH * row);
-			//row_end = row_start - (`TEMPLATE_SIZE - 1);
-			out[row] = register[buffer_size - ((2 * `SEARCH_WIDTH) * row) -: (`TEMPLATE_SIZE - 1)];
+			//row_end = row_start - (`TEMPLATE_WIDTH - 1);
+			out[row] = register[buffer_size - ((2 * `SEARCH_WIDTH) * row) -: (`TEMPLATE_WIDTH - 1)];
 		end
 	end
 
