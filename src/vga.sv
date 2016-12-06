@@ -94,9 +94,15 @@ module top (
             green =  4'h0;
             red =  4'h0;
         end else if(drawBox) begin
-            blue =  `WHITE;
-            green =  `WHITE;
-            red =  `WHITE;
+            if (capture_state) begin
+                blue =  0;
+                green =  0;
+                red =  4'hf;
+            end else begin
+                blue =  `WHITE;
+                green =  `WHITE;
+                red =  `WHITE;
+            end
         end else begin
             blue = frame_pixel_display;
             green = frame_pixel_display;
@@ -173,11 +179,22 @@ module top (
     assign button_pulse = ~reg_button_press &&  J_BUTTON;
 
 
+
+    logic pressed;
+    logic [$clog2(5000000):0] delay_count;
     always_ff @(posedge clk) begin
         if(~rst_n) begin
             capture_state <= 0; 
-        end else if(button_pulse) begin
+            delay_count <= 1;
+            pressed <= 0;
+        end else if(button_pulse && !pressed) begin
+            pressed <= 1;
             capture_state <= ~capture_state;
+        end else if(pressed) begin
+            delay_count <= delay_count + 1;
+            if (delay_count == 0) begin
+                pressed <= 0;
+            end
         end
     end
 
@@ -313,20 +330,23 @@ module template_capture(
             template_y <= 0;
             capturing_template <= 1;
         end else if(template_in_box && everyOther && capturing_template) begin
-            if ((template_x == `TEMPLATE_WIDTH - 1)) begin
+             if (template_start) begin
+                template_x <= 0;
+                template_y <= 0;
+            end else if ((template_x == `TEMPLATE_WIDTH - 1)) begin
                 template_x <= 0;
                 if (template_y == `TEMPLATE_WIDTH - 1) 
                     template_y <= 0;
                 else 
                     template_y <= template_y + 1;
                 
-            end
-            else begin
+            end else begin
                 template_x <= template_x + 1;
             end
+
             if (template_y <= `TEMPLATE_WIDTH -1)
                 template_reg[template_y][template_x] <= capture_data_template;
-            
+
         end
         everyOther <= ~everyOther;
 
