@@ -117,6 +117,7 @@ module top (
       .move_left (~J_LEFT),
       .move_right (~J_RIGHT),
       .mode (SW0),
+      .smooth_mode (SW1),
       .clk (clk_50),
       .rst_n (rst_n),
       .x (x),

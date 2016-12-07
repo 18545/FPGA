@@ -45,7 +45,7 @@ module correlator (
     assign static_read_address = read_y*`VGA_WIDTH + read_x;
 
     assign in_box = (read_y >= top && read_y <= bottom && read_x >= left && read_x <= right);
-    assign on_screen = (read_y >= 10 && read_y <= 470 && read_x >= 10 && read_x <= 630);
+    assign on_screen = ((read_y - `TEMPLATE_WIDTH/2) > `BOX_WIDTH && (read_y - `TEMPLATE_WIDTH/2) < (`VGA_HEIGHT-`BOX_WIDTH) && (read_x - `TEMPLATE_WIDTH/2) > `BOX_WIDTH && (read_x - `TEMPLATE_WIDTH/2) < (`VGA_WIDTH - `BOX_WIDTH));
 
 	always_ff @(posedge clk) begin
 		if(~rst_n || ~tracking_mode) begin
