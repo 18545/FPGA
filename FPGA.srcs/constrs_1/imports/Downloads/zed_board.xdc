@@ -107,6 +107,12 @@ set_property PACKAGE_PIN R18 [get_ports BTNR]
 #set_property PACKAGE_PIN D13 [get_ports PB1]
 #set_property PACKAGE_PIN C10 [get_ports PB2]
 
+#JOYSTICK
+set_property PACKAGE_PIN AB6 [get_ports {J_UP}]; # "JC1_N"
+set_property PACKAGE_PIN AA4 [get_ports {J_LEFT}]; # "JC1_N"
+set_property PACKAGE_PIN T6 [get_ports {J_RIGHT}]; # "JC1_N"
+set_property PACKAGE_PIN U4 [get_ports {J_DOWN}]; # "JC1_N"
+set_property PACKAGE_PIN W7 [get_ports {J_BUTTON}]; # "JD1_N"
 
 
 # Magic
